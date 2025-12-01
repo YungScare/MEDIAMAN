@@ -22,6 +22,11 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #000000;
+    color-scheme: dark;
+}
+
 body {
     font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
@@ -29,6 +34,7 @@ body {
     overflow-x: hidden;
     position: relative;
     min-height: 100vh;
+    background-color: #000000;
 }
 
 /* ===== ФОН С МЕДИА-ГРАДИЕНТОМ И LIQUID BLOBS ===== */
