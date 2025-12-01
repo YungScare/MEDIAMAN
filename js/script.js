@@ -271,8 +271,14 @@ function updateMobileNavIndicator(forceAnimation = false) {
         const currentIndex = sidebarNav.getAttribute('data-active-index');
         const newIndex = String(activeIndex);
         
+        // Если индекс не изменился и это не принудительная анимация, просто обновляем без анимации
+        if (currentIndex === newIndex && !forceAnimation) {
+            // Индекс не изменился, просто обновляем без анимации
+            return;
+        }
+        
         // Если нужно принудительно запустить анимацию (например, при загрузке страницы)
-        if (forceAnimation || currentIndex === null || currentIndex === newIndex) {
+        if (forceAnimation || currentIndex === null) {
             // Временно устанавливаем противоположную позицию для запуска анимации
             const oppositeIndex = activeIndex === 0 ? '1' : '0';
             sidebarNav.setAttribute('data-active-index', oppositeIndex);
@@ -313,6 +319,7 @@ function updateMobileNavIndicator(forceAnimation = false) {
                 });
             });
         } else {
+            // Индекс изменился - запускаем анимацию перемещения
             // Находим родительский sidebar и увеличиваем его z-index
             const sidebar = sidebarNav.closest('.sidebar');
             
