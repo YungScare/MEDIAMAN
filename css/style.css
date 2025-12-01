@@ -1745,6 +1745,19 @@ body::after {
         z-index: 50;
     }
 
+    /* Коррекция для устройств с вырезами (iOS safe-area) */
+    @supports (padding-top: env(safe-area-inset-top)) {
+        .catalog-grid::before {
+            top: calc(-1 * env(safe-area-inset-top));
+            height: calc(60px + env(safe-area-inset-top));
+        }
+
+        .catalog-grid::after {
+            bottom: calc(-1 * env(safe-area-inset-bottom));
+            height: calc(120px + env(safe-area-inset-bottom));
+        }
+    }
+
     .catalog-item {
         display: flex;
         flex-direction: row;
