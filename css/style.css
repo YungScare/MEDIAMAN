@@ -1723,11 +1723,11 @@ body::after {
     .catalog-grid::before {
         content: '';
         position: fixed;
-        /* Немного выходим за верхний край, чтобы не было просвета на устройствах с вырезом/статус-баром */
-        top: -32px;
+        /* С существенным запасом выходим за верхний край, чтобы не было просвета на устройствах с вырезом/статус-баром */
+        top: -100px;
         left: 0;
         right: 0;
-        height: 92px;
+        height: 180px;
         background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
         pointer-events: none;
         z-index: 50;
@@ -1737,11 +1737,11 @@ body::after {
     .catalog-grid::after {
         content: '';
         position: fixed;
-        /* Аналогично выходим за нижний край экрана, чтобы перекрыть область с жестами/системными элементами */
-        bottom: -34px;
+        /* Аналогично с большим запасом выходим за нижний край экрана, чтобы перекрыть область с жестами/системными элементами */
+        bottom: -120px;
         left: 0;
         right: 0;
-        height: 154px;
+        height: 260px;
         background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
         pointer-events: none;
         z-index: 50;
