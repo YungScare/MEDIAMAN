@@ -1,0 +1,2456 @@
+/* ===== CSS ПЕРЕМЕННЫЕ ===== */
+:root {
+    --glass-bg: rgba(10, 10, 20, 0.5);
+    --glass-bg-light: rgba(10, 10, 20, 0.4);
+    --glass-bg-heavy: rgba(10, 10, 20, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-border-light: rgba(255, 255, 255, 0.15);
+    --glass-border-heavy: rgba(255, 255, 255, 0.25);
+    --blur-amount: 24px;
+    --blur-heavy: 32px;
+    --radius-glass: 20px;
+    --radius-glass-small: 24px;
+    --radius-glass-large: 36px;
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --shadow-glass-heavy: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* ===== ФОН С МЕДИА-ГРАДИЕНТОМ И LIQUID BLOBS ===== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.555) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.76) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.801) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a14 0%, #1a1a2e 50%, #0f0f1f 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Liquid Blobs */
+body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(0, 0, 0, 0.582) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(0, 0, 0, 0.527) 0%, transparent 40%),
+        radial-gradient(circle at 50% 30%, rgba(206, 82, 10, 0.12) 0%, transparent 40%);
+    filter: blur(40px);
+    animation: blobMove 25s ease-in-out infinite;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+@keyframes blobMove {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+    25% {
+        transform: translate(5%, -5%) scale(1.1);
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    }
+    50% {
+        transform: translate(-5%, 5%) scale(0.9);
+        border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+    }
+    75% {
+        transform: translate(3%, 3%) scale(1.05);
+        border-radius: 40% 60% 60% 40% / 60% 40% 40% 60%;
+    }
+}
+
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== ГЛОБАЛЬНЫЙ КЛАСС LIQUID GLASS ===== */
+.mm-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-glass);
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    overflow: hidden;
+}
+
+.mm-glass::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+    filter: blur(24px);
+    animation: glassBlob 15s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes glassBlob {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(10%, -10%) scale(1.2);
+    }
+}
+
+.mm-glass > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== БОКОВАЯ ПАНЕЛЬ ===== */
+.sidebar {
+    width: 300px;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background: var(--glass-bg-heavy);
+    backdrop-filter: blur(var(--blur-heavy)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--blur-heavy)) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0;
+    box-shadow: var(--shadow-glass-heavy);
+    padding: 24px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+}
+
+/* Логотип */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Навигация */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 1000px;
+    transition: all 0.3s ease;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid transparent;
+    font-size: 16px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    border-radius: 50%;
+}
+
+.nav-item:hover {
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.nav-item.active {
+    background: rgba(255, 107, 53, 0.2);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.2);
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Профиль пользователя */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 1000px;
+    margin-top: auto;
+    transition: all 0.3s ease;
+    position: relative; /* для позиционирования поповера выхода */
+}
+
+.user-profile:hover {
+    transform: translateY(-2px);
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--glass-border-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.profile-handle {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.profile-menu {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.profile-menu:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Поповер профиля (кнопка "Выйти") */
+.profile-popover {
+    position: absolute;
+    right: 0;
+    bottom: 64px;
+    min-width: 160px;
+    padding: 10px 0;
+    border-radius: 16px;
+    background: rgba(10, 10, 20, 0.9);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition:
+        opacity 0.18s ease-out,
+        transform 0.18s ease-out,
+        visibility 0s 0.18s;
+    z-index: 220;
+}
+
+.profile-popover.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+        opacity 0.18s ease-out,
+        transform 0.18s ease-out,
+        visibility 0s;
+}
+
+.profile-popover-item {
+    width: 100%;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.profile-popover-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ff6b35;
+}
+
+/* Мобильный вариант поповера профиля в шапке (под аватаром) */
+@media (max-width: 480px) {
+    .profile-popover--mobile {
+        position: fixed;
+        top: 84px;          /* чуть ниже аватарки и трех точек */
+        right: 20px;
+        bottom: auto;
+        transform: translateY(0);
+    }
+}
+
+/* ===== ОСНОВНАЯ ОБЛАСТЬ ===== */
+.main-content {
+    flex: 1;
+    margin-left: 300px;
+    padding: 40px;
+    position: relative;
+}
+
+/* Заголовок и контролы */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 20px;
+}
+
+.page-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 1000px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 107, 53, 0.8);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    border-radius: 50%;
+}
+
+.btn:hover {
+    background: rgba(255, 107, 53, 0.9);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
+}
+
+.btn:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 1000px;
+    padding: 12px 20px;
+    min-width: 300px;
+    box-shadow: var(--shadow-glass);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+    filter: blur(20px);
+    animation: searchBlob 12s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes searchBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(10%, -10%) scale(1.2); }
+}
+
+.search-box > * {
+    position: relative;
+    z-index: 1;
+}
+
+.search-box:hover {
+    background: var(--glass-bg-heavy);
+    border-color: var(--glass-border-heavy);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.search-box:focus-within {
+    background: var(--glass-bg-heavy);
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== DESKTOP POPOVER СОРТИРОВКИ ===== */
+.desktop-sort-wrapper {
+    position: relative;
+}
+
+.desktop-filter-wrapper {
+    position: relative;
+}
+
+.desktop-sort-popover {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    border-radius: 24px;
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 0 8px 32px rgba(255, 255, 255, 0.05),
+        inset 0 -6px 20px rgba(0, 0, 0, 0.45),
+        0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+    transform-origin: top left;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0s 0.3s;
+    overflow: hidden;
+}
+
+/* Поповер фильтров - позиционирование справа, чтобы не выходить за экран */
+#desktopFilterPopover {
+    left: auto;
+    right: 0;
+    transform-origin: top right;
+    max-width: min(650px, calc(100vw - 40px));
+}
+
+.desktop-sort-popover.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+        opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0s;
+}
+
+/* Элементы desktop popover */
+.desktop-sort-popover .sort-current {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s, background 0.2s ease;
+}
+
+.desktop-sort-popover.active .sort-current {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.desktop-sort-popover .sort-current:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.desktop-sort-popover .sort-current-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.desktop-sort-popover .sort-current-text {
+    flex: 1;
+}
+
+.desktop-sort-popover .sort-chevron {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.desktop-sort-popover.active .sort-chevron {
+    transform: rotate(0deg);
+}
+
+.desktop-sort-popover .popover-divider {
+    width: 85%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 8px auto;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+}
+
+.desktop-sort-popover.active .popover-divider {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.desktop-sort-popover .sort-options,
+.desktop-sort-popover .sort-direction {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 20px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.desktop-sort-popover.active .sort-options {
+    transition-delay: 0.15s;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.desktop-sort-popover.active .sort-direction {
+    transition-delay: 0.2s;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.desktop-sort-popover .sort-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.desktop-sort-popover .sort-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.desktop-sort-popover .sort-option.active {
+    background: rgba(255, 255, 255, 0.12);
+    font-weight: 500;
+}
+
+.desktop-sort-popover .sort-check {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.desktop-sort-popover .sort-option.active .sort-check {
+    opacity: 1;
+}
+
+/* Сброс задержек при закрытии */
+.desktop-sort-popover:not(.active) .sort-current,
+.desktop-sort-popover:not(.active) .popover-divider,
+.desktop-sort-popover:not(.active) .sort-options,
+.desktop-sort-popover:not(.active) .sort-direction {
+    transition-delay: 0s;
+}
+
+/* ===== СТИЛИ ДЛЯ ФИЛЬТРОВ ===== */
+/* Увеличиваем ширину поповера фильтров */
+#desktopFilterPopover {
+    min-width: 580px;
+    padding: 16px 0;
+}
+
+/* Обертка для секций фильтров */
+#desktopFilterPopover .filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Делаем опции фильтров в несколько колонок для экономии места */
+#desktopFilterPopover .filter-section .sort-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    padding: 0 20px;
+}
+
+.filter-section-title {
+    padding: 12px 20px 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px 0 20px;
+    margin-top: 8px;
+}
+
+.filter-actions .btn {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+}
+
+/* ===== СЕТКА КАТАЛОГА ===== */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+}
+
+.catalog-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+    border: none;
+    border-radius: var(--radius-glass);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: fit-content;
+    max-width: 242px;
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+/* Убираем стандартные стили ссылок */
+.catalog-item:link,
+.catalog-item:visited,
+.catalog-item:active,
+.catalog-item:focus {
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+}
+
+.catalog-item:focus-visible {
+    outline: 2px solid rgba(255, 107, 53, 0.5);
+    outline-offset: 2px;
+}
+
+.catalog-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(138, 43, 226, 0.08) 0%, transparent 50%);
+    filter: blur(24px);
+    animation: cardBlob 18s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes cardBlob {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(5%, -5%) scale(1.1);
+    }
+}
+
+.catalog-item > * {
+    position: relative;
+    z-index: 1;
+}
+
+.catalog-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-glass-heavy);
+}
+
+.catalog-item:hover .poster-image {
+    border-color: var(--glass-border-heavy);
+    border-radius: 0 0 var(--radius-glass) var(--radius-glass);
+}
+
+.poster-image {
+    position: relative;
+    width: 240px;
+    height: 344px;
+    background-color: #2a2a2a;
+    overflow: hidden;
+    border-radius: 0 0 var(--radius-glass) var(--radius-glass);
+    border: 1px solid var(--glass-border);
+    border-bottom: none;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.poster-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.catalog-item:hover .poster-image img {
+    transform: scale(1.05);
+}
+
+.poster-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: #fff;
+    padding: 4px 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.poster-tag::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+    filter: blur(16px);
+    animation: tagBlob 8s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes tagBlob {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(10%, -10%) scale(1.2);
+    }
+}
+
+.poster-tag > * {
+    position: relative;
+    z-index: 1;
+}
+
+.poster-seasons-tag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: #fff;
+    padding: 4px 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: none;
+    border-left: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.poster-seasons-tag::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+    filter: blur(16px);
+    animation: tagBlob 8s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.poster-seasons-tag > * {
+    position: relative;
+    z-index: 1;
+}
+
+.poster-content {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.poster-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.detail-title {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.detail-meta {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.detail-genres {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+
+/* Tablet */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .sidebar {
+        width: 240px;
+        left: 0;
+        top: 0;
+    }
+
+    .main-content {
+        margin-left: 240px;
+        padding: 30px;
+    }
+
+    .page-title {
+        font-size: 36px;
+    }
+
+    .catalog-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .search-box {
+        min-width: 250px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .sidebar {
+        width: calc(100% - 30px);
+        height: auto;
+        position: relative;
+        left: 15px;
+        top: 15px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-content {
+        padding: 16px;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        gap: 8px;
+
+    }
+
+    .nav-item {
+        flex: 1;
+        justify-content: center;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .nav-item span {
+        display: none;
+    }
+
+    .user-profile {
+        margin-top: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        letter-spacing: 1px;
+    }
+
+    .header-controls {
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px 24px;
+    }
+
+    .search-box {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .poster-content {
+        padding: 16px;
+    }
+}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ (320-480px) ===== */
+@media (max-width: 480px) {
+    /* Темный фон для мобильной версии */
+    body::before {
+        background: #0B0B0B;
+    }
+
+    body::after {
+        display: none;
+    }
+
+    .app-wrapper {
+        flex-direction: column;
+        background: #000;
+    }
+
+    /* Скрываем десктопный sidebar */
+    .sidebar {
+        display: none;
+    }
+
+    /* Основной контент */
+    .main-content {
+        margin-left: 0;
+        padding: 30px 20px 100px;
+        width: 100%;
+        max-width: 100%;
+        background: #000;
+    }
+
+    /* ===== ШАПКА ЭКРАНА ===== */
+    .content-header {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding-top: 0;
+        margin-bottom: 0;
+        gap: 0;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: none;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border: none;
+    }
+
+    /* Скрываем десктопные контролы на мобильных */
+    .header-controls {
+        display: none;
+    }
+
+    /* ===== КНОПКА С ТРЕМЯ ТОЧКАМИ ===== */
+    .mobile-menu-toggle {
+        position: fixed;
+        top: 30px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        color: #fff;
+        cursor: pointer;
+        z-index: 150;
+        transition: all 0.3s ease;
+        padding: 0;
+    }
+
+    .mobile-menu-toggle:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+    }
+
+    .mobile-menu-toggle:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .three-dots-icon {
+        width: 20px;
+        height: 20px;
+        display: block;
+    }
+
+    /* Мобильный аватар в шапке каталога (слева от трех точек) */
+    .mobile-profile-avatar {
+        position: fixed;
+        top: 30px;
+        right: 72px; /* 44px ширина three-dots + ~8px-10px зазор */
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        z-index: 150;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .mobile-profile-avatar:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+    }
+
+    .mobile-profile-avatar:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-profile-avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* ===== POPOVER С ФИЛЬТРАМИ ===== */
+    .mobile-popover {
+        position: fixed;
+        top: 84px;
+        right: 20px;
+        width: min(75%, 280px);
+        display: flex;
+        flex-direction: column;
+        padding: 12px 0;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        z-index: 140;
+        overflow: visible;
+        isolation: isolate;
+        /* Начальное состояние - скрыто */
+        opacity: 0;
+        transform: scale(0.85) translateY(-12px);
+        transform-origin: top right;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            visibility 0s 0.3s;
+    }
+
+    .mobile-popover.active {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+        transition:
+            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            visibility 0s;
+    }
+
+    /* Плавная анимация закрытия - visibility скрывается после завершения анимации */
+    .mobile-popover:not(.active) {
+        transition:
+            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            visibility 0s 0.3s;
+    }
+
+    /* Состояние первого popover */
+    .mm-popover-main {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    /* Контейнер для кнопки сортировки */
+    .mm-sort-trigger {
+        position: relative;
+        overflow: visible;
+    }
+
+    /* Элементы первого popover - начальное состояние */
+    .mm-popover-main > .popover-item,
+    .mm-popover-main > .popover-divider {
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* Элементы первого popover - когда popover открыт */
+    .mobile-popover.active > .popover-item,
+    .mobile-popover.active > .popover-divider {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Задержка для элементов */
+    .mobile-popover.active > .popover-item:nth-child(1) {
+        transition-delay: 0.05s;
+    }
+
+    .mobile-popover.active > .popover-divider {
+        transition-delay: 0.1s;
+    }
+
+    .mobile-popover.active > .mm-sort-trigger {
+        transition-delay: 0.15s;
+    }
+
+    .mobile-popover.active > .mm-sort-trigger > .popover-item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.15s;
+    }
+
+    /* Плавная анимация закрытия элементов */
+    .mobile-popover:not(.active) > .popover-item,
+    .mobile-popover:not(.active) > .popover-divider,
+    .mobile-popover:not(.active) > .mm-sort-trigger > .popover-item,
+    .mobile-popover:not(.active) > .mm-filter-trigger > .popover-item {
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        transition-delay: 0s;
+    }
+
+    /* Когда сортировка открыта, скрываем элементы первого popover (кроме кнопки сортировки) */
+    .mm-popover-main.sort-open > .popover-item:not(.mm-sort-trigger .popover-item),
+    .mm-popover-main.sort-open > .popover-divider {
+        transform: translateY(-6px);
+        pointer-events: none;
+    }
+
+    .popover-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        position: relative;
+    }
+
+    /* Стрелка вправо для кнопки сортировки по умолчанию */
+    .mm-sort-trigger #sortButton::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 4L10 8L6 12' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: rotate(0deg);
+        transition: transform 0.3s ease;
+    }
+
+    /* Стрелка вниз для кнопки сортировки когда popover открыт (вращаем на 90 градусов) */
+    .mm-sort-trigger.is-open #sortButton::after {
+        transform: rotate(90deg);
+    }
+
+    .popover-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .popover-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        display: block;
+    }
+
+    .popover-divider {
+        width: 85%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.15);
+        margin: 8px auto;
+    }
+
+    .sort-popover .popover-divider {
+        margin: 6px auto;
+    }
+
+    /* ===== POPOVER СОРТИРОВКИ ===== */
+    .mm-popover-sort {
+        position: fixed;
+        top: 120px;
+        right: 20px;
+        width: min(100%, 280px);
+        display: flex;
+        flex-direction: column;
+        padding: 16px 0;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        z-index: 151;
+        opacity: 0;
+        transform: scale(0.3) translateY(-10px);
+        transform-origin: top center;
+        pointer-events: none;
+        transition:
+            opacity 0.28s ease,
+            transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+            border-radius 0.32s ease,
+            backdrop-filter 0.32s ease;
+        overflow: hidden;
+        will-change: backdrop-filter, opacity, transform;
+    }
+
+    /* Когда сортировка открыта */
+    .mm-sort-trigger.is-open .mm-popover-sort {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+        border-radius: 24px;
+    }
+
+    /* Контент второго popover с fade + translate */
+    .mm-popover-sort > * {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s;
+    }
+
+    .mm-sort-trigger.is-open .mm-popover-sort > * {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ===== ФИЛЬТРЫ - копия стилей сортировки ===== */
+    .mm-filter-trigger {
+        position: relative;
+        overflow: visible;
+    }
+
+    .mobile-popover.active > .mm-filter-trigger {
+        transition-delay: 0.15s;
+    }
+
+    .mobile-popover.active > .mm-filter-trigger > .popover-item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.15s;
+    }
+
+    .mobile-popover:not(.active) > .mm-filter-trigger > .popover-item {
+        transition-delay: 0s;
+    }
+
+    /* Когда фильтры открыты, скрываем элементы первого popover (кроме кнопки фильтров) */
+    .mm-popover-main.filter-open > .popover-item:not(.mm-filter-trigger .popover-item),
+    .mm-popover-main.filter-open > .popover-divider {
+        transform: translateY(-6px);
+        pointer-events: none;
+    }
+
+    /* Стрелка вправо для кнопки фильтров по умолчанию */
+    .mm-filter-trigger #filterButton::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 4L10 8L6 12' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: rotate(0deg);
+        transition: transform 0.3s ease;
+    }
+
+    /* Стрелка вниз для кнопки фильтров когда popover открыт (вращаем на 90 градусов) */
+    .mm-filter-trigger.is-open #filterButton::after {
+        transform: rotate(90deg);
+    }
+
+    /* Когда фильтры открыты */
+    .mm-filter-trigger.is-open .mm-popover-sort {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+        border-radius: 20px;
+        /* Уменьшаем ширину для поповера фильтров */
+        width: min(calc(100vw - 40px), 320px);
+        max-height: 65vh;
+        overflow-y: auto;
+        padding: 10px 0;
+        /* Сдвигаем правее */
+        top: 120px;
+        right: 10px;
+    }
+
+    .mm-filter-trigger.is-open .mm-popover-sort > * {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Делаем опции фильтров в несколько колонок для уменьшения высоты */
+    .mm-filter-trigger.is-open .mm-popover-sort .filter-section .sort-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+    }
+
+    /* Уменьшаем отступы в секциях фильтров для мобильной версии */
+    .mm-filter-trigger.is-open .mm-popover-sort .filter-section-title {
+        padding: 6px 16px 4px 16px;
+        font-size: 10px;
+    }
+
+    .mm-filter-trigger.is-open .mm-popover-sort .popover-divider {
+        margin: 6px 0;
+    }
+
+    /* Уменьшаем размер кнопок "Сбросить" и "Применить" в мобильной версии */
+    .mm-filter-trigger.is-open .mm-popover-sort .filter-actions {
+        padding: 10px 16px 0 16px;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .mm-filter-trigger.is-open .mm-popover-sort .filter-actions .btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        flex: 0 0 auto;
+        min-width: 100px;
+        max-width: 120px;
+    }
+
+    /* Уменьшаем padding опций фильтров */
+    .mm-filter-trigger.is-open .mm-popover-sort .sort-options {
+        padding: 0 16px;
+        gap: 3px;
+    }
+
+    .mm-filter-trigger.is-open .mm-popover-sort .sort-option {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    /* Уменьшаем размер sort-current */
+    .mm-filter-trigger.is-open .mm-popover-sort .sort-current {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+
+    .sort-current {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 20px;
+        border-radius: 0;
+        margin: 0 0 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .sort-current:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sort-current-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    .sort-current-text {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        text-align: left;
+    }
+
+    .sort-chevron {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0.6;
+    }
+
+    .sort-options,
+    .sort-direction {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .sort-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 20px;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        width: 100%;
+    }
+
+    .sort-option:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .sort-check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .sort-option.active .sort-check {
+        opacity: 1;
+    }
+
+    .sort-option span {
+        flex: 1;
+    }
+
+    /* ===== СПИСОК КАРТОЧЕК ===== */
+    .catalog-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        margin-top: 35px;
+        padding: 0;
+        position: relative;
+    }
+
+    /* Эффект плавного исчезновения сверху */
+    .catalog-grid::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    /* Эффект плавного исчезновения снизу */
+    .catalog-grid::after {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    .catalog-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        gap: 30px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        box-shadow: none;
+        position: relative;
+    }
+
+    .catalog-item::before {
+        display: none;
+    }
+
+    /* Разделительная линия под карточкой на уровне нижней границы обложки */
+    .catalog-divider {
+        position: absolute;
+        left: 99px; /* 85px ширина обложки + 14px gap */
+        right: 0;
+        bottom: 1px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: 1;
+    }
+
+    /* Скрываем разделитель у последней карточки */
+    .catalog-item:last-child .catalog-divider {
+        display: none;
+    }
+
+    /* Постер слева */
+    .poster-image {
+        width: 85px;
+        height: 119px; /* 85 * 1.4 */
+        border-radius: 13px;
+        border: none;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #2a2a2a;
+    }
+
+    /* Отключаем hover эффекты для мобильной версии */
+    .catalog-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .catalog-item:hover .poster-image {
+        border-color: transparent;
+        border-radius: 13px;
+    }
+
+    .catalog-item:hover .poster-image img {
+        transform: none;
+    }
+
+    .poster-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .poster-tag,
+    .poster-seasons-tag {
+        display: none;
+    }
+
+    /* Текстовый блок справа */
+    .poster-content {
+        flex: 1;
+        padding: 0;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        min-width: 0;
+    }
+
+    .poster-details {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* Жанр / Статус - используем существующий элемент или создаем через псевдоэлемент */
+    .poster-details::before {
+        content: 'Сериал | 3 сезона';
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 4px;
+        order: -1;
+    }
+
+    /* Название */
+    .detail-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #fff;
+        line-height: 1.3;
+        margin: 0;
+        order: 0;
+    }
+
+    /* Описание */
+    .detail-meta {
+        font-size: 12px;
+        color: #B4B4B4;
+        font-weight: 400;
+        line-height: 1.4;
+        order: 1;
+        margin-top: 2px;
+    }
+
+    .detail-genres {
+        font-size: 12px;
+        color: #B4B4B4;
+        font-weight: 400;
+        line-height: 1.4;
+        order: 2;
+        margin-top: 0;
+    }
+
+    /* ===== НИЖНЕЕ МЕНЮ (TABBAR) - СТЕКЛЯННАЯ ПИЛЮЛЯ ===== */
+    .sidebar {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: auto;
+        width: auto;
+        height: 56px;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: none;
+        box-shadow: none;
+        z-index: 200;
+        overflow: visible;
+    }
+
+    .sidebar-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 56px;
+        gap: 12px;
+        padding: 0;
+        overflow: visible;
+        transition: gap 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    /* Уменьшаем gap при активном поиске для более компактного вида */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-content {
+        gap: 4px;
+    }
+
+    .logo,
+    .user-profile {
+        display: none;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: 56px;
+        gap: 4px;
+        padding: 6px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(5px) saturate(180%);
+        -webkit-backdrop-filter: blur(5px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-sizing: border-box;
+        align-self: center;
+        position: relative;
+        overflow: visible;
+        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    /* Анимированный индикатор для активного элемента с эффектом жидкого стекла */
+    .sidebar-nav::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 3px;
+        width: calc((100% - 12px - 4px) / 2);
+        height: 49px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+            /* Эффект жидкого стекла по левому краю */
+            inset -2px 0 8px -4px rgba(255, 255, 255, 0.4),
+            /* Эффект жидкого стекла по правому краю */
+            inset 2px 0 8px -4px rgba(255, 255, 255, 0.4);
+        transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1), 
+                    height 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+                    top 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+                    background 0.4s ease,
+                    backdrop-filter 0.5s ease,
+                    -webkit-backdrop-filter 0.5s ease,
+                    box-shadow 0.4s ease,
+                    z-index 0.1s ease;
+        z-index: 0;
+        pointer-events: none;
+        overflow: visible;
+        box-sizing: border-box;
+        will-change: transform, height, top, backdrop-filter;
+    }
+    
+
+    /* Анимированный градиент внутри индикатора для эффекта "жидкости" по краям */
+    .sidebar-nav::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 3px;
+        width: calc((100% - 12px - 4px) / 2);
+        height: 49px;
+        border-radius: 999px;
+        background: 
+            /* Эффект жидкого стекла по левому краю */
+            linear-gradient(to right, 
+                rgba(255, 255, 255, 0.5) 0%, 
+                rgba(255, 255, 255, 0.2) 8px, 
+                transparent 16px
+            ),
+            /* Эффект жидкого стекла по правому краю */
+            linear-gradient(to left, 
+                rgba(255, 255, 255, 0.5) 0%, 
+                rgba(255, 255, 255, 0.2) 8px, 
+                transparent 16px
+            ),
+            /* Градиент для эффекта глубины */
+            radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+        opacity: 0.8;
+        z-index: 1;
+        pointer-events: none;
+        transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+                    height 0.5s cubic-bezier(0.34, 1.2, 0.64, 1),
+                    top 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        animation: liquidGlass 4s ease-in-out infinite;
+        box-sizing: border-box;
+    }
+    
+
+    .sidebar-nav[data-active-index="0"]::after {
+        transform: translateX(0);
+    }
+
+    .sidebar-nav[data-active-index="1"]::after {
+        transform: translateX(calc(100% + 4px));
+    }
+
+    @keyframes liquidGlass {
+        0%, 100% {
+            opacity: 0.5;
+        }
+        25% {
+            opacity: 0.7;
+        }
+        50% {
+            opacity: 0.6;
+        }
+        75% {
+            opacity: 0.65;
+        }
+    }
+
+    /* Позиционирование индикатора через data-атрибут */
+    .sidebar-nav[data-active-index="0"]::before {
+        transform: translateX(0);
+    }
+
+    .sidebar-nav[data-active-index="1"]::before {
+        transform: translateX(calc(100% + 4px));
+    }
+
+    /* Отключение transition для мгновенной установки начальной позиции */
+    .sidebar-nav.no-transition::before,
+    .sidebar-nav.no-transition::after {
+        transition: none !important;
+    }
+    
+    /* Состояние анимации - увеличение высоты и выход за границы */
+    /* Увеличиваем z-index всего sidebar при анимации навигации */
+    .sidebar:has(.sidebar-nav[data-animating="true"]) {
+        z-index: 250;
+    }
+    
+    .sidebar-nav[data-animating="true"]::before {
+        height: 59px;
+        top: -2px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        z-index: 10;
+    }
+    
+    .sidebar-nav[data-animating="true"]::after {
+        height: 59px;
+        top: -2px;
+        z-index: 11;
+    }
+    
+    /* Активный элемент поверх при анимации */
+    .sidebar-nav[data-animating="true"] .nav-item.active {
+        z-index: 12;
+        position: relative;
+    }
+    
+    /* Состояние расширения при клике на уже активную вкладку */
+    .sidebar:has(.sidebar-nav[data-expanding="true"]) {
+        z-index: 250;
+    }
+    
+    .sidebar-nav[data-expanding="true"]::before {
+        height: 59px;
+        top: -2px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        z-index: 10;
+    }
+    
+    .sidebar-nav[data-expanding="true"]::after {
+        height: 59px;
+        top: -2px;
+        z-index: 11;
+    }
+    
+    .sidebar-nav[data-expanding="true"] .nav-item.active {
+        z-index: 12;
+        position: relative;
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 5px 18px;
+        background: transparent;
+        border: none;
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Убираем transition для background и box-shadow активного nav-item при сворачивании */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active {
+        transition: opacity 0.3s ease, transform 0.3s ease !important;
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        line-height: 1;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .nav-item::before {
+        display: none;
+    }
+
+    /* Активная кнопка с улучшенным эффектом жидкого стекла */
+    .nav-item.active {
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        color: #fff;
+        border: none;
+        box-shadow: none;
+        position: relative;
+        font-weight: 600;
+    }
+
+    .nav-item span {
+        display: block;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    }
+
+    /* ===== КНОПКА ПОИСКА (ЧАСТЬ САЙДБАРА) ===== */
+    .mobile-search-btn {
+        position: relative;
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        padding: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        margin: 0;
+        align-self: center;
+    }
+
+    .mobile-search-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .mobile-search-btn:active:not(.search-active) {
+        transform: scale(0.95);
+    }
+
+    .search-btn-icon {
+        width: 22px;
+        height: 22px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    }
+
+    /* ===== СОСТОЯНИЕ АКТИВНОГО ПОИСКА ===== */
+    /* Когда поиск активен, sidebar-nav становится круглой и смещается влево */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav {
+        width: 56px !important;
+        min-width: 56px;
+        max-width: 56px;
+        height: 56px;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        transform: translateX(-12px);
+        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        overflow: hidden;
+        gap: 0 !important;
+        flex: 0 0 56px;
+    }
+
+    /* Скрываем неактивные навигационные элементы при активном поиске */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item:not(.active) {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        width: 0;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        display: none;
+    }
+
+    /* Показываем активный элемент в центре круглого sidebar-nav */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active {
+        opacity: 1 !important;
+        pointer-events: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        z-index: 10;
+        transition: opacity 0.3s ease, transform 0.3s ease !important;
+        flex-direction: row;
+        gap: 0;
+    }
+    
+    /* Убираем transition для background и визуальных свойств активного nav-item при сворачивании */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active {
+        transition: opacity 0.3s ease, transform 0.3s ease !important;
+    }
+    
+    /* Убираем все transition для background, border, box-shadow при сворачивании */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active,
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active * {
+        transition-property: opacity, transform !important;
+        transition-duration: 0.3s !important;
+        transition-timing-function: ease !important;
+    }
+
+    /* Скрываем текст активного элемента, показываем только иконку */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active span {
+        display: none;
+    }
+
+    /* Настраиваем иконку активного элемента */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active .nav-icon {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+    }
+
+    /* Скрываем псевдоэлементы индикатора при активном поиске - мгновенно, без анимации */
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav::before,
+    .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: none !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Когда поиск активен, mobile-search-btn становится капсулой */
+    .mobile-search-btn.search-active {
+        width: var(--original-nav-width, auto) !important;
+        min-width: 200px;
+        max-width: calc(100vw - 120px);
+        border-radius: 999px !important;
+        padding: 6px 20px !important;
+        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        justify-content: flex-start;
+        gap: 12px;
+        flex: 0 1 auto;
+    }
+
+    /* Внутренний контент для капсулы поиска */
+    .mobile-search-btn.search-active .search-btn-icon {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        opacity: 50%;
+    }
+
+    /* Стили для input поля поиска */
+    .mobile-search-input {
+        display: none;
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        width: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .mobile-search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Показываем input когда поиск активен */
+    .mobile-search-btn.search-active .mobile-search-input {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Адаптация для маленьких экранов при активном поиске */
+    @media (max-width: 400px) {
+        .mobile-search-btn.search-active {
+            min-width: 200px;
+            max-width: calc(100vw - 100px);
+        }
+        
+        .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav {
+            transform: translateX(-8px);
+        }
+    }
+
+    @media (max-width: 360px) {
+        .mobile-search-btn.search-active {
+            min-width: 180px;
+            max-width: calc(100vw - 90px);
+        }
+        
+        .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav {
+            width: 48px !important;
+            min-width: 48px;
+            max-width: 48px;
+            height: 48px;
+            transform: translateX(-6px);
+        }
+
+        /* Активный элемент в круглом sidebar-nav на маленьких экранах */
+        .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active {
+            width: 48px;
+            height: 48px;
+        }
+
+        .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active .nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .mobile-search-btn.search-active {
+            padding: 5px 16px !important;
+        }
+    }
+
+    /* Адаптация для маленьких экранов */
+    @media (max-width: 400px) {
+        .sidebar-content {
+            gap: 10px;
+        }
+        
+        .sidebar-nav {
+            max-width: 240px;
+        }
+        
+        .mobile-search-btn {
+            width: 52px;
+            height: 52px;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .sidebar-content {
+            gap: 8px;
+        }
+        
+        .sidebar-nav {
+            width: 75%;
+            max-width: 220px;
+        }
+        
+        .mobile-search-btn {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .search-btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+/* Скрываем мобильные элементы на desktop */
+@media (min-width: 481px) {
+    .mobile-menu-toggle,
+    .mobile-popover,
+    .mobile-search-btn,
+    .mobile-profile-avatar {
+        display: none !important;
+    }
+
+    /* Убираем фон у карточек каталога в десктопной версии */
+    .catalog-item {
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .catalog-item::before {
+        display: none;
+    }
+
+    /* При наведении тоже без фона/тени */
+    .catalog-item:hover {
+        box-shadow: none;
+        background: transparent;
+    }
+}
+
+/* Скрываем desktop popover на мобильных */
+@media (max-width: 480px) {
+    .desktop-sort-popover {
+        display: none !important;
+    }
+}
+

@@ -1,0 +1,918 @@
+/* ===== СТРАНИЦА КАРТОЧКИ ФИЛЬМА/СЕРИАЛА ===== */
+
+/* Десктопный хедер */
+.movie-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    margin-bottom: 40px;
+}
+
+.movie-header-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.movie-header-left .logo {
+    margin-bottom: 0;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1000px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+/* Убираем стандартные стили ссылок */
+.back-button:link,
+.back-button:visited,
+.back-button:active,
+.back-button:focus {
+    text-decoration: none;
+    color: #fff;
+    outline: none;
+}
+
+.back-button:focus-visible {
+    outline: 2px solid rgba(255, 107, 53, 0.5);
+    outline-offset: 2px;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(-4px);
+}
+
+.back-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.movie-header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+
+.rate-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    display: none;
+}
+
+/* Мобильные кнопки */
+.mobile-back-button,
+.mobile-share-button {
+    display: none;
+}
+
+/* Основной контент */
+.movie-card-content {
+    display: flex;
+    gap: 40px;
+    padding: 0 40px 40px;
+    max-width: 1400px;
+    width: 100%;
+}
+
+/* Обертка для постера и рейтинга (Desktop) */
+.poster-wrapper {
+    flex-shrink: 0;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Постер */
+.movie-poster {
+    width: 100%;
+    position: relative;
+}
+
+.poster-image {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+/* Overlay на постере для мобилки */
+.poster-overlay {
+    display: none;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+/* Информация о фильме */
+.movie-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.movie-title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.movie-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin: 0;
+    flex: 1;
+}
+
+/* Мобильная мета-информация */
+.mobile-movie-meta {
+    display: none;
+}
+
+/* Кнопки действий */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.action-buttons-row {
+    display: flex;
+    gap: 16px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1000px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        inset -1px 0 2px rgba(255, 255, 255, 0.2),
+        inset 1px 0 2px rgba(255, 255, 255, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    filter: blur(24px);
+    animation: glassBlob 15s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes glassBlob {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(10%, -10%) scale(1.2);
+    }
+}
+
+.action-btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.action-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 
+        inset -1px 0 3px rgba(255, 255, 255, 0.3),
+        inset 1px 0 3px rgba(255, 255, 255, 0.3),
+        0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.action-btn.active {
+    background: rgba(255, 107, 53, 0.25);
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 
+        inset -1px 0 2px rgba(255, 107, 53, 0.3),
+        inset 1px 0 2px rgba(255, 107, 53, 0.3),
+        0 2px 8px rgba(255, 107, 53, 0.2);
+}
+
+.action-btn.active::before {
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 107, 53, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(255, 107, 53, 0.15) 0%, transparent 50%);
+}
+
+.action-btn svg,
+.action-btn img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.action-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Описание */
+.movie-description {
+    position: relative;
+}
+
+.description-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+.show-more-btn {
+    margin-top: 12px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1000px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.show-more-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Рейтинг сериала */
+.series-rating-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.series-rating-section.desktop-rating {
+    display: flex;
+}
+
+.series-rating-section.mobile-rating {
+    display: none;
+}
+
+.rating-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.popcorn-rating.interactive .popcorn-icon {
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.popcorn-rating.interactive .popcorn-icon[data-active="true"] {
+    opacity: 1 !important;
+    transform: translateY(-2px) scale(1.05);
+}
+
+.popcorn-rating.interactive .popcorn-icon[data-active="false"] {
+    opacity: 0.25 !important;
+}
+
+.popcorn-rating {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.popcorn-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.popcorn-icon.half {
+    opacity: 0.5;
+}
+
+.iconic-badge {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex-shrink: 0;
+    cursor: pointer;
+    opacity: 0.5;
+    transform: scale(0.9);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.age-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 5px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.rating-display[data-user-rating="6"] .iconic-badge {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.05);
+}
+
+.user-rating-display {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.user-rating-label {
+    font-weight: 500;
+}
+
+.user-rating-value {
+    font-weight: 600;
+    color: #ff6b35;
+}
+
+.user-rating-max {
+    opacity: 0.7;
+}
+
+/* О сериале */
+.about-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.about-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.about-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.about-value {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 400;
+}
+
+/* В главных ролях */
+.cast-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cast-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cast-item {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cast-item:last-child {
+    border-bottom: none;
+}
+
+.show-more-cast-btn {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1000px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.show-more-cast-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+@media (max-width: 480px) {
+    /* Скрываем десктопный хедер */
+    .movie-card-header {
+        display: none;
+    }
+
+    /* Показываем мобильные кнопки */
+    .mobile-back-button,
+    .mobile-share-button {
+        position: fixed;
+        top: 30px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        color: #fff;
+        cursor: pointer;
+        z-index: 150;
+        transition: all 0.3s ease;
+        padding: 0;
+        text-decoration: none;
+    }
+
+    /* Убираем стандартные стили ссылок для мобильных кнопок */
+    .mobile-back-button:link,
+    .mobile-back-button:visited,
+    .mobile-back-button:active,
+    .mobile-back-button:focus {
+        text-decoration: none;
+        color: #fff;
+        outline: none;
+    }
+
+    .mobile-back-button:focus-visible {
+        outline: 2px solid rgba(255, 107, 53, 0.5);
+        outline-offset: 2px;
+    }
+
+    .mobile-back-button {
+        left: 20px;
+    }
+
+    .mobile-share-button {
+        right: 20px;
+    }
+
+    .mobile-back-button:hover,
+    .mobile-share-button:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+    }
+
+    .mobile-back-button:active,
+    .mobile-share-button:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-back-button svg,
+    .mobile-share-button svg,
+    .mobile-share-button img {
+        width: 20px;
+        height: 20px;
+        display: block;
+        object-fit: contain;
+    }
+
+    .share-icon {
+        filter: brightness(0) invert(1);
+    }
+
+    /* Убираем padding у main-content для мобилки на странице карточки */
+    .main-content {
+        padding: 0 !important;
+    }
+
+    /* Основной контент на мобилке */
+    .movie-card-content {
+        flex-direction: column;
+        padding: 0 0 100px;
+        gap: 4px;
+        position: relative;
+    }
+
+    /* Эффект плавного исчезновения сверху */
+    .movie-card-content::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.2) 80%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    /* Эффект плавного исчезновения снизу */
+    .movie-card-content::after {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    /* Обертка для постера на мобилке */
+    .poster-wrapper {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+
+    /* Постер на мобилке */
+    .movie-poster {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Скрываем десктопный рейтинг на мобилке */
+    .series-rating-section.desktop-rating {
+        display: none;
+    }
+
+    /* Показываем мобильный рейтинг */
+    .series-rating-section.mobile-rating {
+        display: flex;
+    }
+
+    .poster-image {
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+        display: block;
+    }
+
+    /* Overlay под постером для мобилки */
+    .poster-overlay {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 20px;
+        margin-top: -60px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+        z-index: 1;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    /* Название на постере (мобилка) */
+    .mobile-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        margin: 0 0 12px 0;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Мобильная мета-информация на постере */
+    .poster-overlay .mobile-movie-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        width: 100%;
+    }
+
+    .poster-overlay .movie-genres {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+    }
+
+    .poster-overlay .movie-year-duration {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    .poster-overlay .movie-badges {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Добавляем отступ сверху для постера, чтобы не перекрывать кнопки */
+    .poster-wrapper {
+        margin-top: 0;
+    }
+
+    /* Информация о фильме на мобилке - добавляем padding */
+    .movie-info {
+        padding: 0 20px;
+        gap: 20px;
+    }
+
+    .movie-title-wrapper {
+        display: none;
+    }
+
+    .rate-button {
+        display: block;
+    }
+
+    .movie-genres {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    .movie-year-duration {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .movie-badges {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    /* Кнопки действий на мобилке */
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .action-buttons-row {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .action-buttons-row .action-btn {
+        flex: 1;
+        max-width: 45%;
+    }
+
+    .action-btn {
+        width: auto;
+        max-width: 80%;
+        min-width: fit-content;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 14px;
+        position: relative;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+        -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            inset -1px 0 2px rgba(255, 255, 255, 0.2),
+            inset 1px 0 2px rgba(255, 255, 255, 0.2),
+            0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: 
+            radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        filter: blur(24px);
+        animation: glassBlob 15s ease-in-out infinite;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .action-btn.active::before {
+        background: 
+            radial-gradient(circle at 30% 40%, rgba(255, 107, 53, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 70% 60%, rgba(255, 107, 53, 0.15) 0%, transparent 50%);
+    }
+
+    .action-btn.active {
+        background: rgba(255, 107, 53, 0.25);
+        border-color: rgba(255, 107, 53, 0.4);
+        box-shadow: 
+            inset -1px 0 2px rgba(255, 107, 53, 0.3),
+            inset 1px 0 2px rgba(255, 107, 53, 0.3),
+            0 2px 8px rgba(255, 107, 53, 0.2);
+    }
+
+    .action-btn > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .action-btn svg,
+    .action-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Описание на мобилке */
+    .description-text {
+        font-size: 14px;
+    }
+
+    /* Рейтинг сериала на мобилке */
+    .series-rating-section {
+        gap: 16px;
+    }
+
+    .rating-label {
+        font-size: 16px;
+    }
+
+    .rating-display {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .popcorn-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .iconic-badge {
+        opacity: 0.5;
+        width: 40px;
+        height: 40px;
+    }
+
+    /* О сериале на мобилке */
+    .about-section {
+        gap: 16px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .about-label {
+        font-size: 13px;
+    }
+
+    .about-value {
+        font-size: 14px;
+    }
+
+    /* В главных ролях на мобилке */
+    .cast-section {
+        gap: 16px;
+    }
+
+    .cast-item {
+        font-size: 14px;
+    }
+
+}
+
+/* ===== ДЕСКТОПНАЯ ВЕРСИЯ ===== */
+@media (min-width: 481px) {
+    .mobile-back-button,
+    .mobile-share-button {
+        display: none;
+    }
+
+    .mobile-only {
+        display: none !important;
+    }
+
+    .desktop-only {
+        display: block !important;
+    }
+
+    .poster-overlay {
+        display: none !important;
+    }
+
+    /* Прямоугольная обложка на десктопе (вертикальная) */
+    .poster-image {
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+    }
+}
+

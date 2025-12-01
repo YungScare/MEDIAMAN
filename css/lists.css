@@ -1,0 +1,379 @@
+/* ===== СТРАНИЦА "МОИ СПИСКИ" ===== */
+
+/* Черная кнопка */
+.btn-black {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-black:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.btn-orange {
+    background: rgba(255, 107, 53, 0.8);
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.btn-orange:hover {
+    background: rgba(255, 107, 53, 0.9);
+    box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
+}
+
+/* Мобильная кнопка добавления */
+.mobile-add-btn {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .mobile-add-btn {
+        position: fixed;
+        top: 30px;
+        right: 76px; /* 20px (отступ mobile-menu-toggle) + 44px (ширина mobile-menu-toggle) + 12px (gap) = 76px */
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        color: #fff;
+        cursor: pointer;
+        z-index: 150;
+        transition: all 0.3s ease;
+        padding: 0;
+    }
+
+    .mobile-add-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+    }
+
+    .mobile-add-icon {
+        width: 20px;
+        height: 20px;
+        display: block;
+    }
+}
+
+/* Сетка списков (Desktop) */
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Карточка списка */
+.list-card {
+    position: relative;
+    border-radius: var(--radius-glass);
+    overflow: hidden;
+    min-height: 280px;
+    background: #000 url('../images/lists/background_lists.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.list-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-glass-heavy);
+}
+
+
+/* Убираем стандартные стили ссылок для карточек списков */
+.list-card:link,
+.list-card:visited,
+.list-card:active,
+.list-card:focus {
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+}
+
+
+
+/* Обертка для заголовка и кнопки редактирования */
+.list-card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.list-card-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0 12px;
+    height: 55px;
+    line-height: 55px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: inline-block;
+    width: fit-content;
+}
+
+/* Поле редактирования названия списка */
+.list-card-title-input {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 18px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    outline: none;
+    min-width: 160px;
+    max-width: 100%;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+}
+
+.list-card-title-input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.list-card-title-input:focus {
+    border-color: rgba(255, 107, 53, 0.7);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 107, 53, 0.4);
+}
+
+.list-card-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.list-card-info-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-right: 63px; /* 55px (ширина share-btn) + 8px (gap) - освобождаем место, чтобы дата не перекрывалась */
+}
+
+.list-card .share-btn {
+    position: absolute;
+    right: 24px; /* Та же позиция справа, что и у edit-btn (20px) */
+    bottom: 24px; /* Внизу карточки, в ряду с информацией (padding карточки) */
+}
+
+.list-card-quantity,
+.list-card-date {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0 12px;
+    height: 55px;
+    line-height: 55px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: inline-block;
+    width: fit-content;
+}
+
+
+.list-action-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.list-action-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.list-action-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+
+/* Мобильная версия списков */
+@media (max-width: 480px) {
+    /* Сетка списков на мобильных - вертикальный список */
+    .lists-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        margin-top: 35px;
+        padding: 0;
+        position: relative;
+    }
+
+    /* Эффект плавного исчезновения сверху */
+    .lists-grid::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    /* Эффект плавного исчезновения снизу */
+    .lists-grid::after {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
+        pointer-events: none;
+        z-index: 50;
+    }
+
+    .list-card {
+        width: 100%;
+        min-height: 200px;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .list-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-glass);
+    }
+
+    .list-card-header {
+        margin-bottom: 12px;
+    }
+
+    .list-card-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin: 0;
+        padding: 0 8px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 20px;
+    }
+
+    .list-card-title-input {
+        font-size: 16px;
+        padding: 6px 10px;
+        border-radius: 14px;
+    }
+
+    .list-card-info {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .list-card-info-right {
+        margin-right: 43px; /* 35px (ширина share-btn) + 8px (gap) */
+    }
+
+    .list-card .share-btn {
+        right: 20px; /* Та же позиция справа, что и у edit-btn на мобилке */
+        bottom: 20px; /* padding карточки на мобилке */
+    }
+
+    .list-card-quantity,
+    .list-card-date {
+        font-size: 13px;
+        font-weight: 300;
+        padding: 0 8px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 20px;
+    }
+
+    .list-action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+    }
+
+    .list-action-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Скрываем десктопные кнопки на мобильных */
+    .header-controls {
+        display: none;
+    }
+
+    /* Обновляем заголовок для мобильных */
+    .content-header {
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        margin: 0;
+    }
+}
+
+/* Десктоп версия списков */
+@media (min-width: 481px) {
+}
+
+/* ===== СТРАНИЦА КАРТОЧКИ СПИСКА (LIST-CARD) ===== */
+/* (стили вынесены в отдельный файл list-card.css) */
