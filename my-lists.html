@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDIAMAN - Мои списки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/lists.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Левая боковая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Логотип -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="images/logos/Logo.png" alt="MEDIAMAN Logo" class="logo-image">
+                    </div>
+                    <span class="logo-text">MEDIAMAN</span>
+                </div>
+
+                <!-- Навигация -->
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-item">
+                        <img src="images/icons/collection.svg" alt="Каталог" class="nav-icon">
+                        <span>Каталог</span>
+                    </a>
+                    <a href="my-lists.html" class="nav-item active">
+                        <img src="images/icons/list-stars.svg" alt="Мои списки" class="nav-icon">
+                        <span>Мои списки</span>
+                    </a>
+                </nav>
+
+                <!-- Мобильная кнопка поиска (часть сайдбара) -->
+                <button class="mobile-search-btn" id="mobileSearchBtn">
+                    <img src="images/icons/search.svg" alt="Поиск" class="search-btn-icon">
+                    <input type="text" placeholder="Поиск" class="mobile-search-input" id="mobileSearchInput">
+                </button>
+
+                <!-- Профиль пользователя -->
+                <div class="user-profile">
+                    <img src="images/avatars/YX.jpg" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <div class="profile-name">FoxY</div>
+                        <div class="profile-handle">@FoxY_Jesus_</div>
+                    </div>
+                    <button class="profile-menu" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="profile-popover" data-profile-popover>
+                        <button class="profile-popover-item" type="button" data-change-avatar-button>
+                            Сменить аватарку
+                        </button>
+                        <button class="profile-popover-item" type="button" data-logout-button>
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основная область контента -->
+        <main class="main-content">
+            <!-- Заголовок и контролы -->
+            <header class="content-header">
+                <h1 class="page-title">МОИ СПИСКИ</h1>
+                <div class="header-controls">
+                    <button class="btn btn-black" id="addListBtn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: 8px;">
+                            <path d="M10 4V16M4 10H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Добавить список
+                    </button>
+                    <div class="desktop-sort-wrapper">
+                        <button class="btn btn-orange" id="desktopSortButton">Сортировка</button>
+                        <!-- Desktop popover сортировки -->
+                        <div class="desktop-sort-popover" id="desktopSortPopover">
+                            <div class="sort-current">
+                                <img src="images/icons/arrow-down-up.svg" alt="" class="sort-current-icon">
+                                <span class="sort-current-text">Сортировка</span>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-options">
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Название</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Рейтинг</span>
+                                </button>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-direction">
+                                <button class="sort-option active">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала новые</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала старые</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-orange" id="selectBtn">Выбрать</button>
+                    <div class="search-box">
+                        <img src="images/icons/search.svg" alt="Поиск" class="search-icon">
+                        <input type="text" placeholder="Поиск" class="search-input">
+                    </div>
+                </div>
+                <!-- Мобильная кнопка с тремя точками -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <img src="images/icons/three-dots.svg" alt="Меню" class="three-dots-icon">
+                </button>
+                <!-- Мобильная кнопка добавления -->
+                <button class="mobile-add-btn" id="mobileAddBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="mobile-add-icon">
+                        <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <!-- Мобильный popover -->
+                <div class="mobile-popover mm-popover-main" id="mobilePopover">
+                    <button class="popover-item" id="selectButton">
+                        <img src="images/icons/check-circle.svg" alt="Выбрать" class="popover-icon">
+                        <span>Выбрать</span>
+                    </button>
+                    <div class="popover-divider"></div>
+                    <div class="mm-sort-trigger" id="sortTrigger">
+                        <button class="popover-item" id="sortButton">
+                            <img src="images/icons/arrow-down-up.svg" alt="Сортировка" class="popover-icon">
+                            <span>Сортировка</span>
+                        </button>
+                        
+                        <!-- Popover сортировки (второй уровень) -->
+                        <div class="mm-popover-sort" id="sortPopover">
+                            <div class="sort-current">
+                                <img src="images/icons/arrow-down-up.svg" alt="" class="sort-current-icon">
+                                <span class="sort-current-text">Сортировка</span>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-options">
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Название</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Рейтинг</span>
+                                </button>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-direction">
+                                <button class="sort-option active">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала новые</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала старые</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Сетка списков -->
+            <div class="lists-grid" id="listsGrid">
+                <!-- Карточка списка -->
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Дублируем карточки для демонстрации -->
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="list-card.html" class="list-card">
+                    <div class="list-card-header">
+                        <div class="list-card-title">Christmas Vibes</div>
+                        <button class="list-action-btn edit-btn" title="Редактировать">
+                            <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                        </button>
+                    </div>
+                    <div class="list-card-info">
+                        <div class="list-card-quantity">Количество: 22</div>
+                        <div class="list-card-info-right">
+                            <div class="list-card-date">Дата создания: 21.10.25</div>
+                            <button class="list-action-btn share-btn" title="Поделиться">
+                                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+                            </button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>

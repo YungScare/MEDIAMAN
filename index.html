@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDIAMAN - Каталог</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Левая боковая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Логотип -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="images/logos/Logo.png" alt="MEDIAMAN Logo" class="logo-image">
+                    </div>
+                    <span class="logo-text">MEDIAMAN</span>
+                </div>
+
+                <!-- Навигация -->
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-item active">
+                        <img src="images/icons/collection.svg" alt="Каталог" class="nav-icon">
+                        <span>Каталог</span>
+                    </a>
+                    <a href="my-lists.html" class="nav-item">
+                        <img src="images/icons/list-stars.svg" alt="Мои списки" class="nav-icon">
+                        <span>Мои списки</span>
+                    </a>
+                </nav>
+
+                <!-- Мобильная кнопка поиска (часть сайдбара) -->
+                <button class="mobile-search-btn" id="mobileSearchBtn">
+                    <img src="images/icons/search.svg" alt="Поиск" class="search-btn-icon">
+                    <input type="text" placeholder="Поиск" class="mobile-search-input" id="mobileSearchInput">
+                </button>
+
+                <!-- Профиль пользователя -->
+                <div class="user-profile">
+                    <img src="images/avatars/YX.jpg" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <div class="profile-name">FoxY</div>
+                        <div class="profile-handle">@FoxY_Jesus_</div>
+                    </div>
+                    <button class="profile-menu" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="profile-popover" data-profile-popover>
+                        <button class="profile-popover-item" type="button" data-change-avatar-button>
+                            Сменить аватарку
+                        </button>
+                        <button class="profile-popover-item" type="button" data-logout-button>
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основная область контента -->
+        <main class="main-content">
+            <!-- Заголовок и контролы -->
+            <header class="content-header">
+                <h1 class="page-title">КАТАЛОГ</h1>
+                <div class="header-controls">
+                    <div class="desktop-sort-wrapper">
+                        <button class="btn btn-orange" id="desktopSortButton">Сортировка</button>
+                        <!-- Desktop popover сортировки -->
+                        <div class="desktop-sort-popover" id="desktopSortPopover">
+                            <div class="sort-current">
+                                <img src="images/icons/arrow-down-up.svg" alt="" class="sort-current-icon">
+                                <span class="sort-current-text">Сортировка</span>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-options">
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Название</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Рейтинг</span>
+                                </button>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="sort-direction">
+                                <button class="sort-option active">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала новые</span>
+                                </button>
+                                <button class="sort-option">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Сначала старые</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="desktop-filter-wrapper">
+                        <button class="btn btn-orange" id="desktopFilterButton">Фильтры</button>
+                        <!-- Desktop popover фильтров -->
+                        <div class="desktop-sort-popover" id="desktopFilterPopover">
+                            <div class="sort-current">
+                                <img src="images/icons/filter-square.svg" alt="" class="sort-current-icon">
+                                <span class="sort-current-text">Фильтры</span>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Тип контента</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Все</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Фильмы</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Сериалы</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Жанры</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Драма</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Комедия</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Боевик</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Триллер</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Фантастика</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Ужасы</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Год выпуска</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2020-2025</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2015-2019</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2010-2014</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>До 2010</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Рейтинг</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>ICONIC</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>5.0+</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>4.0+</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Любой</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-actions">
+                                <button class="btn btn-secondary" id="resetFilters">Сбросить</button>
+                                <button class="btn btn-orange" id="applyFilters">Применить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-box">
+                        <img src="images/icons/search.svg" alt="Поиск" class="search-icon">
+                        <input type="text" placeholder="Поиск" class="search-input">
+                    </div>
+                </div>
+                <!-- Мобильная кнопка профиля (аватарка) -->
+                <button class="mobile-profile-avatar" type="button" id="mobileProfileAvatar">
+                    <img src="images/avatars/YX.jpg" alt="Profile" class="mobile-profile-avatar-img">
+                </button>
+                <!-- Мобильная кнопка с тремя точками -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <img src="images/icons/three-dots.svg" alt="Меню" class="three-dots-icon">
+                </button>
+                <!-- Поповер профиля в мобильной шапке -->
+                <div class="profile-popover profile-popover--mobile" data-mobile-profile-popover>
+                    <button class="profile-popover-item" type="button" data-change-avatar-button>
+                        Сменить аватарку
+                    </button>
+                    <button class="profile-popover-item" type="button" data-logout-button>
+                        Выйти
+                    </button>
+                </div>
+                <!-- Мобильный popover с фильтрами -->
+                <div class="mobile-popover mm-popover-main" id="mobilePopover">
+                    <div class="mm-filter-trigger" id="filterTrigger">
+                        <button class="popover-item" id="filterButton">
+                        <img src="images/icons/filter-square.svg" alt="Фильтры" class="popover-icon">
+                        <span>Фильтры</span>
+                    </button>
+                        
+                        <!-- Popover фильтров (второй уровень) -->
+                        <div class="mm-popover-sort" id="filterPopover">
+                            <div class="sort-current">
+                                <img src="images/icons/filter-square.svg" alt="" class="sort-current-icon">
+                                <span class="sort-current-text">Фильтры</span>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Тип контента</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Все</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Фильмы</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Сериалы</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Жанры</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Драма</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Комедия</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Боевик</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Триллер</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Фантастика</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Ужасы</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Год выпуска</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2020-2025</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2015-2019</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>2010-2014</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>До 2010</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-section">
+                                <div class="filter-section-title">Рейтинг</div>
+                                <div class="sort-options">
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>ICONIC</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>5.0+</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>4.0+</span>
+                                    </button>
+                                    <button class="sort-option">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                            <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>Любой</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="popover-divider"></div>
+                            
+                            <div class="filter-actions">
+                                <button class="btn btn-secondary" id="resetFiltersMobile">Сбросить</button>
+                                <button class="btn btn-orange" id="applyFiltersMobile">Применить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popover-divider"></div>
+                    <div class="mm-sort-trigger" id="sortTrigger">
+                        <button class="popover-item" id="sortButton">
+                            <img src="images/icons/arrow-down-up.svg" alt="Сортировка" class="popover-icon">
+                            <span>Сортировка</span>
+                        </button>
+                        
+                        <!-- Popover сортировки (второй уровень) -->
+                        <div class="mm-popover-sort" id="sortPopover">
+                    <div class="sort-current">
+                        <img src="images/icons/arrow-down-up.svg" alt="" class="sort-current-icon">
+                        <span class="sort-current-text">Сортировка</span>
+                    </div>
+                    
+                    <div class="popover-divider"></div>
+                    
+                    <div class="sort-options">
+                        <button class="sort-option">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Название</span>
+                        </button>
+                        <button class="sort-option">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Рейтинг</span>
+                        </button>
+                    </div>
+                    
+                    <div class="popover-divider"></div>
+                    
+                    <div class="sort-direction">
+                        <button class="sort-option active">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Сначала новые</span>
+                        </button>
+                        <button class="sort-option">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-check">
+                                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Сначала старые</span>
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Сетка постеров -->
+            <div class="catalog-grid">
+                <!-- Постер 1 -->
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <!-- Повторяем постеры для демонстрации сетки -->
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                    <div class="catalog-divider"></div>
+                </a>
+
+                <a href="movie-card.html" class="catalog-item">
+                    <div class="poster-image">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King">
+                        <span class="poster-tag">СЕРИАЛ</span>
+                        <span class="poster-seasons-tag">3 сезона</span>
+                    </div>
+                    <div class="poster-content">
+                        <div class="poster-details">
+                            <div class="detail-title">Король Талсы</div>
+                            <div class="detail-meta">2022-2025, США,</div>
+                            <div class="detail-genres">Драма, Преступление, Комедия</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>

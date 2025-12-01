@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDIAMAN - Король Талсы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/movie-card.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Левая боковая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Логотип -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="images/logos/Logo.png" alt="MEDIAMAN Logo" class="logo-image">
+                    </div>
+                    <span class="logo-text">MEDIAMAN</span>
+                </div>
+
+                <!-- Навигация -->
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-item active">
+                        <img src="images/icons/collection.svg" alt="Каталог" class="nav-icon">
+                        <span>Каталог</span>
+                    </a>
+                    <a href="my-lists.html" class="nav-item">
+                        <img src="images/icons/list-stars.svg" alt="Мои списки" class="nav-icon">
+                        <span>Мои списки</span>
+                    </a>
+                </nav>
+
+                <!-- Мобильная кнопка поиска (часть сайдбара) -->
+                <button class="mobile-search-btn" id="mobileSearchBtn">
+                    <img src="images/icons/search.svg" alt="Поиск" class="search-btn-icon">
+                    <input type="text" placeholder="Поиск" class="mobile-search-input" id="mobileSearchInput">
+                </button>
+
+                <!-- Профиль пользователя -->
+                <div class="user-profile">
+                    <img src="images/avatars/YX.jpg" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <div class="profile-name">FoxY</div>
+                        <div class="profile-handle">@FoxY_Jesus_</div>
+                    </div>
+                    <button class="profile-menu" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="profile-popover" data-profile-popover>
+                        <button class="profile-popover-item" type="button" data-change-avatar-button>
+                            Сменить аватарку
+                        </button>
+                        <button class="profile-popover-item" type="button" data-logout-button>
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основная область контента -->
+        <main class="main-content">
+            <!-- Заголовок и контролы (Desktop) -->
+            <header class="content-header movie-card-header">
+                <div class="movie-header-left">
+                    <a href="index.html" class="back-button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>НАЗАД</span>
+                    </a>
+                </div>
+                <div class="movie-header-right">
+                    <div class="search-box">
+                        <img src="images/icons/search.svg" alt="Поиск" class="search-icon">
+                        <input type="text" placeholder="Поиск" class="search-input">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Мобильные кнопки -->
+            <a href="index.html" class="mobile-back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <button class="mobile-share-button">
+                <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="share-icon">
+            </button>
+
+            <!-- Основной контент -->
+            <div class="movie-card-content">
+                <!-- Постер и рейтинг (Desktop) -->
+                <div class="poster-wrapper">
+                    <div class="movie-poster">
+                        <img src="images/catalog/poster_card.png" alt="Tulsa King" class="poster-image">
+                    </div>
+                    <!-- Мобильный overlay с названием и мета-информацией -->
+                    <div class="poster-overlay mobile-only">
+                        <h1 class="movie-title mobile-title">Король Талсы / Tulsa King</h1>
+                        <div class="mobile-movie-meta">
+                            <div class="movie-genres">Сериал | Драма | Преступление</div>
+                            <div class="movie-year-duration">2022 | 45 мин</div>
+                            <div class="movie-badges">
+                                <img src="images/icons/iconic.png" alt="ICONIC" class="iconic-badge">
+                                <span class="age-badge">16+</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Рейтинг сериала (Desktop - под постером) -->
+                    <div class="series-rating-section desktop-rating">
+                        <div class="rating-label">Рейтинг сериала</div>
+                        <div class="rating-display" data-rating-id="tulsa-king">
+                            <div class="popcorn-rating">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon half">
+                            </div>
+                            <img src="images/icons/iconic.png" alt="ICONIC" class="iconic-badge">
+                            <div class="user-rating-display">
+                                <span class="user-rating-label">Ваша оценка:</span>
+                                <span class="user-rating-value">—</span>
+                                <span class="user-rating-max">/ 5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Информация о фильме/сериале -->
+                <div class="movie-info">
+                    <!-- Название и рейтинг (Desktop) -->
+                    <div class="movie-title-wrapper desktop-only">
+                        <h1 class="movie-title">Король Талсы / Tulsa King</h1>
+                        <div class="rating-section">
+                            <button class="btn btn-orange rate-button">Оценить</button>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="action-buttons">
+                        <button class="action-btn add-to-list-btn">
+                            <img src="images/icons/collection-plus.svg" alt="Добавить в список" class="action-icon">
+                            <span>Добавить в список</span>
+                        </button>
+                        <div class="action-buttons-row">
+                            <button class="action-btn will-watch-btn">
+                                <img src="images/icons/bookmark-plus.svg" alt="Буду смотреть" class="action-icon">
+                                <span>Буду смотреть</span>
+                            </button>
+                            <button class="action-btn watched-btn">
+                                <img src="images/icons/bookmark-check.svg" alt="Просмотрено" class="action-icon">
+                                <span>Просмотрено</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Описание -->
+                    <div class="movie-description">
+                        <p class="description-text">
+                            Осужденный нью-йоркский мафиози Дуайт Манфреди по прозвищу Генерал спустя четверть века выходит на свободу. Босс отправляет его в глушь в Талсу, штат Оклахома для организации там криминальной сети. Генерал берётся за дело со всей серьёзностью и начинает создавать новую криминальную империю.
+                        </p>
+                        <button class="show-more-btn">ЕЩЕ</button>
+                    </div>
+
+                    <!-- Рейтинг сериала (Mobile) -->
+                    <div class="series-rating-section mobile-rating">
+                        <div class="rating-label">Рейтинг сериала</div>
+                        <div class="rating-display" data-rating-id="tulsa-king">
+                            <div class="popcorn-rating">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon filled">
+                                <img src="images/icons/popcorn.png" alt="Popcorn" class="popcorn-icon half">
+                            </div>
+                            <img src="images/icons/iconic.png" alt="ICONIC" class="iconic-badge">
+                            <div class="user-rating-display">
+                                <span class="user-rating-label">Ваша оценка:</span>
+                                <span class="user-rating-value">—</span>
+                                <span class="user-rating-max">/ 5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- О сериале -->
+                    <div class="about-section">
+                        <h2 class="section-title">О сериале</h2>
+                        <div class="about-grid">
+                            <div class="about-item">
+                                <span class="about-label">Год производства:</span>
+                                <span class="about-value">2022 (3 сезона)</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Платформа:</span>
+                                <span class="about-value">Paramount+</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Страна:</span>
+                                <span class="about-value">США</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Жанр:</span>
+                                <span class="about-value">драма, криминал, комедия</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Режиссер:</span>
+                                <span class="about-value">Кевин Даулинг, Крейг Зиск, Аллен Кутлер, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Сценарий:</span>
+                                <span class="about-value">Девид Флеботт, Сильвестр Сталлоне, Уильям Шмидт, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Продюсер:</span>
+                                <span class="about-value">Тейлор Шеридан, Сильвестр Сталлоне, Рон Беркл, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Оператор:</span>
+                                <span class="about-value">Джон Линдли, Камерон Дункан, Jalaludin Trautmann, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Композитор:</span>
+                                <span class="about-value">Денни Бенси, Сондер Юрриаанс</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Художник:</span>
+                                <span class="about-value">Джон Д. Кретщмер, Тодд Джеффри, Бернардо Трухильо, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Монтаж:</span>
+                                <span class="about-value">Джонни Конверс, Эми Колла, Дж. Кэтлин Гибсон, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Премьера в мире:</span>
+                                <span class="about-value">13 ноября 2022, ...</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Цифровой релиз:</span>
+                                <span class="about-value">13 ноября 2022, «Paramount+»</span>
+                            </div>
+                            <div class="about-item">
+                                <span class="about-label">Время серии:</span>
+                                <span class="about-value">40 мин</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- В главных ролях -->
+                    <div class="cast-section">
+                        <h2 class="section-title">В главных ролях</h2>
+                        <div class="cast-list">
+                            <div class="cast-item">Сильвестр Сталлоне</div>
+                            <div class="cast-item">Андреа Сэвадж</div>
+                            <div class="cast-item">Мартин Старр</div>
+                            <div class="cast-item">Джей Уилл</div>
+                            <div class="cast-item">Макс Казелла</div>
+                            <div class="cast-item">Доменик Ломбардоцци</div>
+                            <div class="cast-item">Винсент Пьяцца</div>
+                            <div class="cast-item">А.С. Петерсон</div>
+                            <div class="cast-item">Гаррет Хедлунд</div>
+                            <div class="cast-item">Дана Дилейни</div>
+                        </div>
+                        <button class="show-more-cast-btn">268 актеров</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
+
