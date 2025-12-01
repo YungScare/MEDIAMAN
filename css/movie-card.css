@@ -589,31 +589,6 @@
         position: relative;
     }
 
-    /* Эффект плавного исчезновения сверху */
-    .movie-card-content::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 80px;
-        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.95) 20%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.2) 80%, transparent 100%);
-        pointer-events: none;
-        z-index: 50;
-    }
-
-    /* Эффект плавного исчезновения снизу */
-    .movie-card-content::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 120px;
-        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
-        pointer-events: none;
-        z-index: 50;
-    }
 
     /* Обертка для постера на мобилке */
     .poster-wrapper {

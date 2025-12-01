@@ -259,31 +259,6 @@
         position: relative;
     }
 
-    /* Эффект плавного исчезновения сверху */
-    .lists-grid::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
-        pointer-events: none;
-        z-index: 50;
-    }
-
-    /* Эффект плавного исчезновения снизу */
-    .lists-grid::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 120px;
-        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
-        pointer-events: none;
-        z-index: 50;
-    }
 
     .list-card {
         width: 100%;
