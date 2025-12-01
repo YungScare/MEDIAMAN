@@ -1723,10 +1723,11 @@ body::after {
     .catalog-grid::before {
         content: '';
         position: fixed;
-        top: 0;
+        /* Немного выходим за верхний край, чтобы не было просвета на устройствах с вырезом/статус-баром */
+        top: -32px;
         left: 0;
         right: 0;
-        height: 60px;
+        height: 92px;
         background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
         pointer-events: none;
         z-index: 50;
@@ -1736,26 +1737,14 @@ body::after {
     .catalog-grid::after {
         content: '';
         position: fixed;
-        bottom: 0;
+        /* Аналогично выходим за нижний край экрана, чтобы перекрыть область с жестами/системными элементами */
+        bottom: -34px;
         left: 0;
         right: 0;
-        height: 120px;
+        height: 154px;
         background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.5) 80%, transparent 100%);
         pointer-events: none;
         z-index: 50;
-    }
-
-    /* Коррекция для устройств с вырезами (iOS safe-area) */
-    @supports (padding-top: env(safe-area-inset-top)) {
-        .catalog-grid::before {
-            top: calc(-1 * env(safe-area-inset-top));
-            height: calc(60px + env(safe-area-inset-top));
-        }
-
-        .catalog-grid::after {
-            bottom: calc(-1 * env(safe-area-inset-bottom));
-            height: calc(120px + env(safe-area-inset-bottom));
-        }
     }
 
     .catalog-item {
