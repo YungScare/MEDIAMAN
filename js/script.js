@@ -1066,3 +1066,51 @@ if (document.readyState === 'loading') {
         alert(`Скопируйте ссылку на список:\n${shareUrl}`);
     });
 })();
+
+// ===== Шеринг фильма/сериала (кнопка mobile-share-button на странице карточки фильма) =====
+(function initMovieShare() {
+    const mobileShareBtn = document.querySelector('.mobile-share-button');
+    if (!mobileShareBtn) return; // только на movie-card.html
+
+    mobileShareBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Получаем название фильма/сериала
+        const titleEl = document.querySelector('.movie-title');
+        const title = titleEl ? titleEl.textContent.trim() : 'Фильм';
+
+        // Используем текущий URL страницы
+        const shareUrl = window.location.href;
+
+        // Пытаемся использовать Web Share API, если доступен
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: title,
+                    text: `Смотри: ${title}`,
+                    url: shareUrl,
+                });
+                return;
+            } catch (err) {
+                // пользователь мог отменить диалог, в этом случае просто выходим
+                if (err && err.name === 'AbortError') return;
+                // иначе пробуем fallback
+            }
+        }
+
+        // Fallback: копируем ссылку в буфер обмена
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Ссылка на фильм скопирована в буфер обмена.');
+                return;
+            } catch {
+                // если не удалось — покажем ссылку в alert
+            }
+        }
+
+        // Самый простой запасной вариант
+        alert(`Скопируйте ссылку на фильм:\n${shareUrl}`);
+    });
+})();
