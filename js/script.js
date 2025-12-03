@@ -778,6 +778,42 @@ if (document.readyState === 'loading') {
     initUserRatings();
 }
 
+// ===== COOKIE BANNER =====
+function initCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    const acceptBtn = document.getElementById('cookieAcceptBtn');
+
+    if (!banner || !acceptBtn) return;
+
+    let accepted = false;
+    try {
+        accepted = window.localStorage && localStorage.getItem('mm_cookies_accepted') === 'true';
+    } catch (e) {
+        accepted = false;
+    }
+
+    if (!accepted) {
+        banner.classList.add('cookie-banner--visible');
+    }
+
+    acceptBtn.addEventListener('click', function () {
+        try {
+            if (window.localStorage) {
+                localStorage.setItem('mm_cookies_accepted', 'true');
+            }
+        } catch (e) {
+            // игнорируем ошибки доступа к localStorage
+        }
+        banner.classList.remove('cookie-banner--visible');
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCookieBanner);
+} else {
+    initCookieBanner();
+}
+
 // ===== Редактирование описания списка на странице list-card =====
 (function initListCardDescriptionEditor() {
     const descriptionSection = document.querySelector('.list-card-description');

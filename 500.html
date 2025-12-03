@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MEDIAMAN — 500</title>
+
+    <!-- PWA / иконки такие же, как у основного сайта -->
+    <link rel="manifest" href="js/manifest.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/logos/app-icon-180.png">
+    <link rel="apple-touch-icon" href="images/logos/app-icon-180.png">
+    <link rel="icon" type="image/png" href="images/logos/Logo.png">
+
+    <!-- Шрифт и стили 500-страницы -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/500.css">
+</head>
+<body>
+    <div class="error-wrapper">
+        <div class="error-card">
+            <div class="error-logo">
+                <div class="error-logo-icon">
+                    <img src="images/logos/Logo.png" alt="MEDIAMAN Logo">
+                </div>
+                <span class="error-logo-text">MEDIAMAN</span>
+            </div>
+
+            <div class="error-content">
+                <div class="error-code">500</div>
+                <h1 class="error-title">Внутренняя ошибка сервера</h1>
+                <p class="error-text">
+                    Что-то пошло не так на нашей стороне. Мы уже работаем над исправлением проблемы.
+                    Попробуйте обновить страницу или вернитесь позже.
+                </p>
+
+                <div class="error-actions">
+                    <a href="index.html" class="btn btn-orange error-btn-main">
+                        Вернуться в каталог
+                    </a>
+                    <button onclick="location.reload()" class="btn btn-secondary error-btn-secondary">
+                        Обновить страницу
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-floating-badge">
+            <img src="images/icons/popcorn.png" alt="" class="error-badge-icon">
+            <span class="error-badge-text">Технический перерыв, но мы скоро вернёмся</span>
+        </div>
+    </div>
+</body>
+</html>
+
