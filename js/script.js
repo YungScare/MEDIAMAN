@@ -1150,3 +1150,41 @@ if (document.readyState === 'loading') {
         alert(`Скопируйте ссылку на фильм:\n${shareUrl}`);
     });
 })();
+
+// ===== УПРАВЛЕНИЕ СТРАНИЦЕЙ ЗАГРУЗКИ =====
+(function initPageLoader() {
+    const pageLoader = document.getElementById('pageLoader');
+    if (!pageLoader) return;
+
+    // Функция для скрытия загрузчика
+    function hideLoader() {
+        if (pageLoader) {
+            pageLoader.classList.add('hidden');
+            // Удаляем элемент из DOM после анимации
+            setTimeout(() => {
+                if (pageLoader.parentNode) {
+                    pageLoader.parentNode.removeChild(pageLoader);
+                }
+            }, 600);
+        }
+    }
+
+    // Ждем полной загрузки страницы
+    if (document.readyState === 'complete') {
+        // Если страница уже загружена, ждем немного для плавности
+        setTimeout(hideLoader, 500);
+    } else {
+        // Ждем загрузки всех ресурсов
+        window.addEventListener('load', () => {
+            // Минимальное время показа загрузчика для плавности
+            setTimeout(hideLoader, 800);
+        });
+    }
+
+    // Запасной вариант: скрываем через максимум 3 секунды
+    setTimeout(() => {
+        if (pageLoader && !pageLoader.classList.contains('hidden')) {
+            hideLoader();
+        }
+    }, 3000);
+})();

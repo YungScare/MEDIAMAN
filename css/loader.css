@@ -1,0 +1,295 @@
+/* ===== СТРАНИЦА ЗАГРУЗКИ ===== */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #000000 0%, #0a0a14 50%, #000000 100%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+    overflow: hidden;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    z-index: 2;
+}
+
+/* Логотип с анимацией */
+.loader-logo {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+.loader-logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.5));
+    animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.5));
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.8));
+    }
+}
+
+/* Текст */
+.loader-text {
+    font-family: 'Golos Text', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    animation: textGlow 2s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 107, 53, 0.5),
+                     0 0 20px rgba(255, 107, 53, 0.3),
+                     0 0 30px rgba(255, 107, 53, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 107, 53, 0.8),
+                     0 0 30px rgba(255, 107, 53, 0.6),
+                     0 0 40px rgba(255, 107, 53, 0.4);
+    }
+}
+
+/* Прогресс-бар */
+.loader-progress {
+    width: 280px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 1000px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 8px;
+}
+
+.loader-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, 
+        rgba(255, 107, 53, 0.8) 0%, 
+        rgba(255, 107, 53, 1) 50%, 
+        rgba(255, 107, 53, 0.8) 100%);
+    border-radius: 1000px;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.6),
+                0 0 20px rgba(255, 107, 53, 0.4);
+    animation: progressLoad 2s ease-in-out infinite;
+    position: relative;
+}
+
+.loader-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        transparent 100%);
+    animation: progressShine 1.5s ease-in-out infinite;
+}
+
+@keyframes progressLoad {
+    0% {
+        width: 0%;
+        transform: translateX(0);
+    }
+    50% {
+        width: 70%;
+        transform: translateX(0);
+    }
+    100% {
+        width: 100%;
+        transform: translateX(0);
+    }
+}
+
+@keyframes progressShine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Частицы фона */
+.loader-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 107, 53, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+    animation: particleFloat 8s ease-in-out infinite;
+}
+
+.particle:nth-child(1) {
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+    animation-duration: 10s;
+}
+
+.particle:nth-child(2) {
+    left: 30%;
+    top: 60%;
+    animation-delay: 1s;
+    animation-duration: 12s;
+}
+
+.particle:nth-child(3) {
+    left: 60%;
+    top: 30%;
+    animation-delay: 2s;
+    animation-duration: 9s;
+}
+
+.particle:nth-child(4) {
+    left: 80%;
+    top: 70%;
+    animation-delay: 1.5s;
+    animation-duration: 11s;
+}
+
+.particle:nth-child(5) {
+    left: 50%;
+    top: 80%;
+    animation-delay: 0.5s;
+    animation-duration: 13s;
+}
+
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.4;
+    }
+    25% {
+        transform: translate(30px, -50px) scale(1.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-20px, -100px) scale(0.8);
+        opacity: 0.6;
+    }
+    75% {
+        transform: translate(40px, -30px) scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+/* Градиентный фон */
+.page-loader::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(255, 107, 53, 0.15) 0%,
+        transparent 50%
+    );
+    animation: backgroundRotate 20s linear infinite;
+    z-index: 1;
+}
+
+.page-loader::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at 70% 70%,
+        rgba(255, 107, 53, 0.1) 0%,
+        transparent 50%
+    );
+    animation: backgroundRotate 25s linear infinite reverse;
+    z-index: 1;
+}
+
+@keyframes backgroundRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .loader-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .loader-text {
+        font-size: 24px;
+        letter-spacing: 2px;
+    }
+
+    .loader-progress {
+        width: 240px;
+    }
+}
+
