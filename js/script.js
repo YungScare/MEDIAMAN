@@ -236,7 +236,7 @@ const actionButtons = document.querySelectorAll('.action-btn');
 if (actionButtons.length > 0) {
     actionButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Пропускаем кнопку "Добавить в список" - она не должна быть активной
+            // Пропускаем кнопку "Добавить в список" - она открывает модальное окно
             if (this.classList.contains('add-to-list-btn')) {
                 return;
             }
@@ -246,6 +246,271 @@ if (actionButtons.length > 0) {
         });
     });
 }
+
+// ===== МОДАЛЬНОЕ ОКНО ВЫБОРА СПИСКА =====
+(function initAddToListModal() {
+    const addToListBtn = document.querySelector('.add-to-list-btn');
+    const addToListModal = document.getElementById('addToListModal');
+    const addToListModalClose = document.getElementById('addToListModalClose');
+    const addToListModalOverlay = addToListModal?.querySelector('.add-to-list-modal-overlay');
+    const addToListItems = document.getElementById('addToListItems');
+    const addToListEmpty = document.getElementById('addToListEmpty');
+
+    if (!addToListBtn || !addToListModal) return; // Работает только на странице карточки фильма
+
+    // Функция для получения списков из localStorage
+    function getListsFromStorage() {
+        try {
+            const stored = localStorage.getItem('mm_user_lists');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Ошибка при чтении списков из localStorage:', e);
+        }
+        return [];
+    }
+
+    // Функция для сохранения списков в localStorage
+    function saveListsToStorage(lists) {
+        try {
+            localStorage.setItem('mm_user_lists', JSON.stringify(lists));
+        } catch (e) {
+            console.error('Ошибка при сохранении списков в localStorage:', e);
+        }
+    }
+
+    // Функция для получения информации о текущем фильме/сериале
+    function getCurrentMovieInfo() {
+        const titleEl = document.querySelector('.movie-title');
+        const title = titleEl ? titleEl.textContent.trim() : '';
+        
+        // Пытаемся получить дополнительную информацию
+        const posterImg = document.querySelector('.poster-image');
+        const posterUrl = posterImg ? posterImg.src : '';
+        
+        // Определяем тип контента (фильм или сериал)
+        const posterTag = document.querySelector('.poster-tag');
+        const isSeries = posterTag && posterTag.textContent.includes('СЕРИАЛ');
+        
+        return {
+            id: `movie_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            title: title,
+            posterUrl: posterUrl,
+            type: isSeries ? 'series' : 'movie',
+            addedAt: new Date().toISOString()
+        };
+    }
+
+    // Функция для загрузки и отображения списков
+    function loadLists() {
+        const lists = getListsFromStorage();
+        
+        if (lists.length === 0) {
+            addToListEmpty.style.display = 'block';
+            addToListItems.style.display = 'none';
+            return;
+        }
+
+        addToListEmpty.style.display = 'none';
+        addToListItems.style.display = 'flex';
+        addToListItems.innerHTML = '';
+
+        const currentMovie = getCurrentMovieInfo();
+
+        lists.forEach((list, index) => {
+            const listItem = document.createElement('div');
+            listItem.className = 'add-to-list-item';
+            
+            // Проверяем, есть ли уже этот фильм в списке
+            const isInList = list.items && list.items.some(item => item.title === currentMovie.title);
+            if (isInList) {
+                listItem.classList.add('selected');
+            }
+
+            listItem.innerHTML = `
+                <div class="add-to-list-item-name">${list.name || 'Без названия'}</div>
+                <div class="add-to-list-item-count">${list.items ? list.items.length : 0} ${getItemCountText(list.items ? list.items.length : 0)}</div>
+                <div class="add-to-list-item-check">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            `;
+
+            listItem.addEventListener('click', function() {
+                // Получаем актуальное состояние списка
+                const updatedLists = getListsFromStorage();
+                const updatedList = updatedLists.find(l => l.id === list.id);
+                if (!updatedList) return;
+
+                const currentlyInList = updatedList.items && updatedList.items.some(item => item.title === currentMovie.title);
+
+                if (currentlyInList) {
+                    // Удаляем из списка
+                    removeMovieFromList(list.id, currentMovie);
+                    listItem.classList.remove('selected');
+                } else {
+                    // Добавляем в список
+                    addMovieToList(list.id, currentMovie);
+                    listItem.classList.add('selected');
+                }
+                
+                // Обновляем счетчик
+                const finalLists = getListsFromStorage();
+                const finalList = finalLists.find(l => l.id === list.id);
+                if (finalList) {
+                    const countEl = listItem.querySelector('.add-to-list-item-count');
+                    const count = finalList.items ? finalList.items.length : 0;
+                    countEl.textContent = `${count} ${getItemCountText(count)}`;
+                }
+            });
+
+            addToListItems.appendChild(listItem);
+        });
+    }
+
+    // Функция для получения правильной формы слова "элемент"
+    function getItemCountText(count) {
+        const lastDigit = count % 10;
+        const lastTwoDigits = count % 100;
+        
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+            return 'элементов';
+        }
+        if (lastDigit === 1) {
+            return 'элемент';
+        }
+        if (lastDigit >= 2 && lastDigit <= 4) {
+            return 'элемента';
+        }
+        return 'элементов';
+    }
+
+    // Функция для добавления фильма в список
+    function addMovieToList(listId, movieInfo) {
+        const lists = getListsFromStorage();
+        const listIndex = lists.findIndex(l => l.id === listId);
+        
+        if (listIndex === -1) return;
+
+        if (!lists[listIndex].items) {
+            lists[listIndex].items = [];
+        }
+
+        // Проверяем, нет ли уже такого фильма
+        const exists = lists[listIndex].items.some(item => item.title === movieInfo.title);
+        if (!exists) {
+            lists[listIndex].items.push(movieInfo);
+            saveListsToStorage(lists);
+        }
+    }
+
+    // Функция для удаления фильма из списка
+    function removeMovieFromList(listId, movieInfo) {
+        const lists = getListsFromStorage();
+        const listIndex = lists.findIndex(l => l.id === listId);
+        
+        if (listIndex === -1) return;
+
+        if (lists[listIndex].items) {
+            lists[listIndex].items = lists[listIndex].items.filter(
+                item => item.title !== movieInfo.title
+            );
+            saveListsToStorage(lists);
+        }
+    }
+
+    // Функция для открытия модального окна
+    function openModal() {
+        loadLists();
+        addToListModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Функция для закрытия модального окна
+    function closeModal() {
+        addToListModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Инициализация списков при первом запуске (если их нет)
+    function initializeListsIfNeeded() {
+        const lists = getListsFromStorage();
+        if (lists.length === 0) {
+            // Пытаемся получить списки из HTML страницы my-lists.html
+            const listsFromHTML = getListsFromHTML();
+            if (listsFromHTML.length > 0) {
+                saveListsToStorage(listsFromHTML);
+            } else {
+                // Создаем демо-списки
+                const demoLists = [
+                    {
+                        id: 'list_1',
+                        name: 'Christmas Vibes',
+                        items: [],
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                saveListsToStorage(demoLists);
+            }
+        }
+    }
+
+    // Функция для получения списков из HTML (со страницы my-lists.html)
+    function getListsFromHTML() {
+        const listsGrid = document.getElementById('listsGrid');
+        if (!listsGrid) return [];
+
+        const listCards = listsGrid.querySelectorAll('.list-card');
+        const lists = [];
+
+        listCards.forEach((card, index) => {
+            const titleEl = card.querySelector('.list-card-title');
+            const quantityEl = card.querySelector('.list-card-quantity');
+            
+            if (titleEl) {
+                const name = titleEl.textContent.trim();
+                const quantityText = quantityEl ? quantityEl.textContent.trim() : '';
+                const quantityMatch = quantityText.match(/\d+/);
+                const quantity = quantityMatch ? parseInt(quantityMatch[0], 10) : 0;
+
+                lists.push({
+                    id: `list_${index + 1}_${Date.now()}`,
+                    name: name,
+                    items: [],
+                    createdAt: new Date().toISOString()
+                });
+            }
+        });
+
+        return lists;
+    }
+
+    // Обработчик клика на кнопку "Добавить в список"
+    addToListBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        initializeListsIfNeeded();
+        openModal();
+    });
+
+    // Обработчик закрытия модального окна
+    if (addToListModalClose) {
+        addToListModalClose.addEventListener('click', closeModal);
+    }
+
+    if (addToListModalOverlay) {
+        addToListModalOverlay.addEventListener('click', closeModal);
+    }
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && addToListModal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+})();
 
 // Плавное перемещение индикатора активного элемента в мобильной навигации
 function updateMobileNavIndicator(forceAnimation = false) {
@@ -1151,40 +1416,123 @@ if (document.readyState === 'loading') {
     });
 })();
 
+// ===== ИНИЦИАЛИЗАЦИЯ СПИСКОВ ИЗ HTML НА СТРАНИЦЕ MY-LISTS =====
+(function initListsFromHTML() {
+    const listsGrid = document.getElementById('listsGrid');
+    if (!listsGrid) return; // Работает только на странице my-lists.html
+
+    // Функция для получения списков из localStorage
+    function getListsFromStorage() {
+        try {
+            const stored = localStorage.getItem('mm_user_lists');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Ошибка при чтении списков из localStorage:', e);
+        }
+        return [];
+    }
+
+    // Функция для сохранения списков в localStorage
+    function saveListsToStorage(lists) {
+        try {
+            localStorage.setItem('mm_user_lists', JSON.stringify(lists));
+        } catch (e) {
+            console.error('Ошибка при сохранении списков в localStorage:', e);
+        }
+    }
+
+    // Инициализируем списки из HTML, если их еще нет в localStorage
+    const existingLists = getListsFromStorage();
+    if (existingLists.length === 0) {
+        const listCards = listsGrid.querySelectorAll('.list-card');
+        const lists = [];
+
+        listCards.forEach((card, index) => {
+            const titleEl = card.querySelector('.list-card-title');
+            const quantityEl = card.querySelector('.list-card-quantity');
+            
+            if (titleEl) {
+                const name = titleEl.textContent.trim();
+                const quantityText = quantityEl ? quantityEl.textContent.trim() : '';
+                const quantityMatch = quantityText.match(/\d+/);
+                const quantity = quantityMatch ? parseInt(quantityMatch[0], 10) : 0;
+
+                lists.push({
+                    id: `list_${index + 1}_${Date.now()}`,
+                    name: name,
+                    items: [],
+                    createdAt: new Date().toISOString()
+                });
+            }
+        });
+
+        if (lists.length > 0) {
+            saveListsToStorage(lists);
+        }
+    }
+})();
+
 // ===== УПРАВЛЕНИЕ СТРАНИЦЕЙ ЗАГРУЗКИ =====
 (function initPageLoader() {
     const pageLoader = document.getElementById('pageLoader');
     if (!pageLoader) return;
 
+    // Проверяем, была ли загрузка уже показана в этой сессии
+    const loaderShown = sessionStorage.getItem('mediaman_loader_shown');
+    
     // Функция для скрытия загрузчика
-    function hideLoader() {
+    function hideLoader(immediate = false) {
         if (pageLoader) {
-            pageLoader.classList.add('hidden');
-            // Удаляем элемент из DOM после анимации
-            setTimeout(() => {
+            if (immediate) {
+                // Мгновенное скрытие без анимации
+                pageLoader.style.display = 'none';
                 if (pageLoader.parentNode) {
                     pageLoader.parentNode.removeChild(pageLoader);
                 }
-            }, 600);
+            } else {
+                // Плавное скрытие с анимацией
+                pageLoader.classList.add('hidden');
+                // Удаляем элемент из DOM после анимации
+                setTimeout(() => {
+                    if (pageLoader.parentNode) {
+                        pageLoader.parentNode.removeChild(pageLoader);
+                    }
+                }, 600);
+            }
         }
+    }
+
+    // Если загрузка уже была показана, скрываем её сразу
+    if (loaderShown === 'true') {
+        hideLoader(true);
+        return;
+    }
+
+    // Функция для завершения загрузки и сохранения флага
+    function completeLoader() {
+        // Сохраняем флаг, что загрузка была показана
+        sessionStorage.setItem('mediaman_loader_shown', 'true');
+        hideLoader(false);
     }
 
     // Ждем полной загрузки страницы
     if (document.readyState === 'complete') {
         // Если страница уже загружена, ждем немного для плавности
-        setTimeout(hideLoader, 500);
+        setTimeout(completeLoader, 500);
     } else {
         // Ждем загрузки всех ресурсов
         window.addEventListener('load', () => {
             // Минимальное время показа загрузчика для плавности
-            setTimeout(hideLoader, 800);
+            setTimeout(completeLoader, 800);
         });
     }
 
     // Запасной вариант: скрываем через максимум 3 секунды
     setTimeout(() => {
-        if (pageLoader && !pageLoader.classList.contains('hidden')) {
-            hideLoader();
+        if (pageLoader && !pageLoader.classList.contains('hidden') && pageLoader.style.display !== 'none') {
+            completeLoader();
         }
     }, 3000);
 })();

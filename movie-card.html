@@ -317,6 +317,29 @@
         </div>
     </div>
 
+    <!-- Модальное окно выбора списка -->
+    <div class="add-to-list-modal" id="addToListModal">
+        <div class="add-to-list-modal-overlay"></div>
+        <div class="add-to-list-modal-content">
+            <div class="add-to-list-modal-header">
+                <h2 class="add-to-list-modal-title">Выберите список</h2>
+                <button class="add-to-list-modal-close" id="addToListModalClose" type="button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="add-to-list-modal-body">
+                <div class="add-to-list-empty" id="addToListEmpty" style="display: none;">
+                    <p>У вас пока нет списков. Создайте первый список на странице "Мои списки".</p>
+                </div>
+                <div class="add-to-list-items" id="addToListItems">
+                    <!-- Списки будут добавлены динамически -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>
