@@ -420,8 +420,8 @@ if (mobileMenuToggle && mobilePopover) {
         updateListCards();
         updateSelectionControls();
         
-        // Если все списки удалены, выходим из режима выбора
-        if (listsGrid.querySelectorAll('.list-card').length === 0) {
+        // Выходим из режима выбора после удаления списков
+        if (isSelectionMode) {
             toggleSelectionMode();
         }
     }
