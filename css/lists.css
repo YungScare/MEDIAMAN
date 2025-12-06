@@ -29,6 +29,85 @@
     box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
 }
 
+/* Кнопка удаления выбранных */
+.btn-red {
+    background: rgba(220, 53, 69, 0.8);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-red:hover {
+    background: rgba(220, 53, 69, 0.9);
+    box-shadow: 0 6px 24px rgba(220, 53, 69, 0.4);
+}
+
+/* Контролы выбора */
+.selection-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+}
+
+/* Счетчик выбранных списков */
+.selection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
+    }
+}
+
+/* Мобильный счетчик выбранных */
+.mobile-selection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(220, 53, 69, 0.8);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 8px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Мобильные контролы выбора */
+.mobile-selection-controls {
+    display: none;
+}
+
+.delete-selected-item {
+    color: rgba(220, 53, 69, 1);
+}
+
+.delete-selected-item:hover {
+    background: rgba(220, 53, 69, 0.1);
+}
+
 /* Мобильная кнопка добавления */
 .mobile-add-btn {
     display: none;
@@ -246,6 +325,80 @@
     opacity: 0.9;
 }
 
+/* Режим выбора списков */
+.list-card.selection-mode {
+    cursor: pointer;
+    position: relative;
+}
+
+.list-card.selection-mode::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-glass);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.list-card.selection-mode:hover::before {
+    border-color: rgba(255, 107, 53, 0.5);
+}
+
+.list-card.selection-mode.selected::before {
+    border-color: rgba(255, 107, 53, 1);
+    background: rgba(255, 107, 53, 0.1);
+}
+
+.list-card.selection-mode.selected {
+    transform: scale(1.02);
+}
+
+/* Кнопка удаления */
+.list-action-btn.delete-btn {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Кнопка удаления на месте кнопки "Поделиться" - приоритет позиционирования */
+.list-card .list-action-btn.delete-btn {
+    position: absolute !important;
+    right: 24px !important;
+    bottom: 24px !important;
+}
+
+.list-action-btn.delete-btn:hover {
+    background: rgba(220, 53, 70, 0.3);
+    border-color: rgba(220, 53, 69, 0.3);
+    transform: scale(1.1);
+}
+
+/* Кнопка сохранения */
+.list-action-btn.save-btn {
+    background: rgba(195, 255, 200, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.list-action-btn.save-btn:hover {
+    background: rgba(175, 255, 182, 0.3);
+    border-color: rgba(175, 255, 182, 0.3);
+    transform: scale(1.1);
+}
+
+/* В режиме выбора скрываем обычные кнопки действий */
+.list-card.selection-mode .list-action-btn.edit-btn,
+.list-card.selection-mode .list-action-btn.share-btn {
+    display: none;
+}
+
+.list-card.selection-mode .list-action-btn.delete-btn {
+    display: flex;
+}
+
 
 /* Мобильная версия списков */
 @media (max-width: 480px) {
@@ -307,6 +460,12 @@
         right: 20px; /* Та же позиция справа, что и у edit-btn на мобилке */
         bottom: 20px; /* padding карточки на мобилке */
     }
+    
+    /* Кнопка удаления на месте кнопки "Поделиться" на мобильных */
+    .list-card .list-action-btn.delete-btn {
+        right: 20px !important;
+        bottom: 20px !important;
+    }
 
     .list-card-quantity,
     .list-card-date {
@@ -327,6 +486,11 @@
     .list-action-icon {
         width: 16px;
         height: 16px;
+    }
+
+    /* Режим выбора на мобильных */
+    .list-card.selection-mode.selected {
+        transform: none;
     }
 
     /* Скрываем десктопные кнопки на мобильных */

@@ -85,17 +85,486 @@ if (mobileMenuToggle && mobilePopover) {
     });
 }
 
-// Обработчик кнопки "Выбрать" на странице списков
+// ===== РЕЖИМ ВЫБОРА СПИСКОВ =====
+(function initListSelectionMode() {
+    const listsGrid = document.getElementById('listsGrid');
+    if (!listsGrid) return; // Работает только на странице my-lists.html
+
+    const selectBtn = document.getElementById('selectBtn'); // Десктопная кнопка
+    const selectButton = document.getElementById('selectButton'); // Мобильная кнопка
+    const mobilePopover = document.getElementById('mobilePopover');
+    const selectionControls = document.getElementById('selectionControls'); // Контролы выбора (десктоп)
+    const mobileSelectionControls = document.getElementById('mobileSelectionControls'); // Контролы выбора (мобильный)
+    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn'); // Кнопка удаления выбранных (десктоп)
+    const mobileDeleteSelectedBtn = document.getElementById('mobileDeleteSelectedBtn'); // Кнопка удаления выбранных (мобильный)
+    const selectionCount = document.getElementById('selectionCount'); // Счетчик выбранных (десктоп)
+    const mobileSelectionCount = document.getElementById('mobileSelectionCount'); // Счетчик выбранных (мобильный)
+    
+    let isSelectionMode = false;
+    const selectedLists = new Set();
+
+    // Функция для включения/выключения режима выбора
+    function toggleSelectionMode() {
+        isSelectionMode = !isSelectionMode;
+        
+        if (!isSelectionMode) {
+            // Выходим из режима выбора
+            selectedLists.clear();
+            // Восстанавливаем все кнопки редактирования
+            restoreAllEditButtons();
+            updateListCards();
+            updateSelectButton();
+            updateSelectionControls();
+        } else {
+            // Входим в режим выбора
+            updateListCards();
+            updateSelectButton();
+            updateSelectionControls();
+        }
+        
+        // Закрываем мобильное меню
+        if (mobilePopover) {
+            mobilePopover.classList.remove('active');
+        }
+    }
+    
+    // Функция для восстановления всех кнопок редактирования
+    function restoreAllEditButtons() {
+        const listCards = listsGrid.querySelectorAll('.list-card');
+        listCards.forEach(card => {
+            const deleteBtn = card.querySelector('.list-action-btn.delete-btn');
+            if (deleteBtn) {
+                const header = card.querySelector('.list-card-header');
+                if (header) {
+                    const newEditBtn = document.createElement('button');
+                    newEditBtn.className = 'list-action-btn edit-btn';
+                    newEditBtn.title = 'Редактировать';
+                    newEditBtn.innerHTML = `
+                        <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                    `;
+                    deleteBtn.parentNode.replaceChild(newEditBtn, deleteBtn);
+                }
+            }
+        });
+    }
+
+    // Функция для инициализации ID карточек из localStorage
+    function initializeListIds() {
+        try {
+            const stored = localStorage.getItem('mm_user_lists');
+            const listCards = listsGrid.querySelectorAll('.list-card');
+            const usedIds = new Set();
+            
+            if (stored) {
+                const lists = JSON.parse(stored);
+                listCards.forEach((card, index) => {
+                    if (!card.dataset.listId) {
+                        // Пытаемся найти соответствующий список по названию, но только если ID еще не использован
+                        const titleEl = card.querySelector('.list-card-title');
+                        const title = titleEl ? titleEl.textContent.trim() : '';
+                        const matchingList = lists.find(list => list.name === title && !usedIds.has(list.id));
+                        
+                        if (matchingList && matchingList.id) {
+                            card.dataset.listId = matchingList.id;
+                            usedIds.add(matchingList.id);
+                        } else if (lists[index] && lists[index].id && !usedIds.has(lists[index].id)) {
+                            card.dataset.listId = lists[index].id;
+                            usedIds.add(lists[index].id);
+                        } else {
+                            // Генерируем уникальный ID для каждой карточки
+                            let newId;
+                            do {
+                                newId = `list_${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}`;
+                            } while (usedIds.has(newId));
+                            card.dataset.listId = newId;
+                            usedIds.add(newId);
+                        }
+                    } else {
+                        // Если ID уже есть, добавляем его в использованные
+                        usedIds.add(card.dataset.listId);
+                    }
+                });
+            } else {
+                // Если нет списков в localStorage, генерируем уникальные ID для всех карточек
+                listCards.forEach((card, index) => {
+                    if (!card.dataset.listId) {
+                        // Генерируем уникальный ID с индексом и случайным значением
+                        const newId = `list_${index + 1}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                        card.dataset.listId = newId;
+                    }
+                });
+            }
+        } catch (e) {
+            console.error('Ошибка при инициализации ID списков:', e);
+            // В случае ошибки все равно генерируем уникальные ID
+            const listCards = listsGrid.querySelectorAll('.list-card');
+            listCards.forEach((card, index) => {
+                if (!card.dataset.listId) {
+                    card.dataset.listId = `list_${index + 1}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                }
+            });
+        }
+    }
+
+    // Функция для обновления состояния карточек списков
+    function updateListCards() {
+        const listCards = listsGrid.querySelectorAll('.list-card');
+        listCards.forEach(card => {
+            if (isSelectionMode) {
+                card.classList.add('selection-mode');
+            } else {
+                card.classList.remove('selection-mode', 'selected');
+            }
+            
+            // Обновляем состояние выбранной карточки (без добавления кнопки удаления)
+            const listId = card.dataset.listId || card.getAttribute('data-list-id');
+            if (listId && selectedLists.has(listId)) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+    }
+
+    // Функция для добавления кнопки удаления
+    function addDeleteButton(card) {
+        // Проверяем, есть ли уже кнопка удаления
+        if (card.querySelector('.list-action-btn.delete-btn')) {
+            return;
+        }
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'list-action-btn delete-btn';
+        deleteBtn.title = 'Удалить список';
+        deleteBtn.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="list-action-icon">
+                <path d="M3 6H5H21M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+        
+        // Добавляем кнопку в header карточки, заменяя кнопку редактирования
+        const header = card.querySelector('.list-card-header');
+        const editBtn = header ? header.querySelector('.list-action-btn.edit-btn') : null;
+        
+        if (header) {
+            if (editBtn) {
+                // Заменяем кнопку редактирования на кнопку удаления
+                editBtn.parentNode.replaceChild(deleteBtn, editBtn);
+            } else {
+                // Если кнопки редактирования нет, просто добавляем
+                header.appendChild(deleteBtn);
+            }
+        }
+        
+        // Обработчик клика на кнопку удаления
+        deleteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteList(card);
+        });
+    }
+
+    // Функция для удаления кнопки удаления и восстановления кнопки редактирования
+    function removeDeleteButton(card) {
+        const deleteBtn = card.querySelector('.list-action-btn.delete-btn');
+        if (deleteBtn) {
+            const header = card.querySelector('.list-card-header');
+            if (header) {
+                // Восстанавливаем кнопку редактирования, если её нет
+                const editBtn = header.querySelector('.list-action-btn.edit-btn');
+                if (!editBtn) {
+                    const newEditBtn = document.createElement('button');
+                    newEditBtn.className = 'list-action-btn edit-btn';
+                    newEditBtn.title = 'Редактировать';
+                    newEditBtn.innerHTML = `
+                        <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+                    `;
+                    deleteBtn.parentNode.replaceChild(newEditBtn, deleteBtn);
+                } else {
+                    deleteBtn.remove();
+                }
+            } else {
+                deleteBtn.remove();
+            }
+        }
+    }
+
+    // Функция для удаления списка
+    function deleteList(card) {
+        const listId = card.dataset.listId || card.getAttribute('data-list-id');
+        
+        // Подтверждение удаления
+        if (confirm('Вы уверены, что хотите удалить этот список?')) {
+            // Удаляем из выбранных
+            selectedLists.delete(listId);
+            
+            // Удаляем из localStorage
+            try {
+                const stored = localStorage.getItem('mm_user_lists');
+                if (stored) {
+                    const lists = JSON.parse(stored);
+                    const filteredLists = lists.filter(list => list.id !== listId);
+                    localStorage.setItem('mm_user_lists', JSON.stringify(filteredLists));
+                }
+            } catch (e) {
+                console.error('Ошибка при удалении списка из localStorage:', e);
+            }
+            
+            // Удаляем карточку из DOM
+            card.remove();
+            
+            // Обновляем состояние
+            updateListCards();
+            updateSelectionControls();
+            
+            // Если все списки удалены, выходим из режима выбора
+            if (listsGrid.querySelectorAll('.list-card').length === 0) {
+                toggleSelectionMode();
+            }
+        }
+    }
+
+    // Функция для обновления текста кнопки "Выбрать"
+    function updateSelectButton() {
+        if (isSelectionMode) {
+            if (selectBtn) {
+                selectBtn.textContent = 'Отменить';
+            }
+            if (selectButton) {
+                const span = selectButton.querySelector('span');
+                if (span) {
+                    span.textContent = 'Отменить';
+                }
+            }
+        } else {
+            if (selectBtn) {
+                selectBtn.textContent = 'Выбрать';
+            }
+            if (selectButton) {
+                const span = selectButton.querySelector('span');
+                if (span) {
+                    span.textContent = 'Выбрать';
+                }
+            }
+        }
+    }
+
+    // Функция для обновления контролов выбора (кнопка удаления и счетчик)
+    function updateSelectionControls() {
+        const count = selectedLists.size;
+        
+        // Обновляем счетчики
+        if (selectionCount) {
+            selectionCount.textContent = count;
+        }
+        if (mobileSelectionCount) {
+            mobileSelectionCount.textContent = count;
+        }
+        
+        // Показываем/скрываем контролы в зависимости от режима и количества выбранных
+        if (isSelectionMode) {
+            if (selectionControls) {
+                selectionControls.style.display = count > 0 ? 'flex' : 'none';
+            }
+            if (mobileSelectionControls) {
+                mobileSelectionControls.style.display = count > 0 ? 'block' : 'none';
+            }
+        } else {
+            if (selectionControls) {
+                selectionControls.style.display = 'none';
+            }
+            if (mobileSelectionControls) {
+                mobileSelectionControls.style.display = 'none';
+            }
+        }
+    }
+
+    // Функция для удаления всех выбранных списков
+    function deleteSelectedLists() {
+        if (selectedLists.size === 0) return;
+        
+        const count = selectedLists.size;
+        const confirmMessage = count === 1 
+            ? 'Вы уверены, что хотите удалить выбранный список?'
+            : `Вы уверены, что хотите удалить ${count} выбранных списков?`;
+        
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+        
+        // Удаляем из localStorage
+        try {
+            const stored = localStorage.getItem('mm_user_lists');
+            if (stored) {
+                const lists = JSON.parse(stored);
+                const filteredLists = lists.filter(list => !selectedLists.has(list.id));
+                localStorage.setItem('mm_user_lists', JSON.stringify(filteredLists));
+            }
+        } catch (e) {
+            console.error('Ошибка при удалении списков из localStorage:', e);
+        }
+        
+        // Удаляем карточки из DOM
+        selectedLists.forEach(listId => {
+            const card = listsGrid.querySelector(`[data-list-id="${listId}"]`);
+            if (card) {
+                card.remove();
+            }
+        });
+        
+        // Очищаем выбранные списки
+        selectedLists.clear();
+        
+        // Обновляем состояние
+        updateListCards();
+        updateSelectionControls();
+        
+        // Если все списки удалены, выходим из режима выбора
+        if (listsGrid.querySelectorAll('.list-card').length === 0) {
+            toggleSelectionMode();
+        }
+    }
+
+    // Обработчик клика на кнопку редактирования в режиме выбора
+    listsGrid.addEventListener('click', function(e) {
+        const editBtn = e.target.closest('.list-action-btn.edit-btn');
+        if (editBtn && isSelectionMode) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const header = editBtn.closest('.list-card-header');
+            if (!header) return;
+            
+            const listCard = header.closest('.list-card');
+            if (!listCard) return;
+            
+            // Переключаем кнопку редактирования на кнопку удаления
+            toggleDeleteButtonInSelection(listCard, editBtn);
+            return;
+        }
+    });
+
+    // Обработчик клика на карточку списка в режиме выбора
+    listsGrid.addEventListener('click', function(e) {
+        const listCard = e.target.closest('.list-card');
+        if (!listCard) return;
+        
+        // Игнорируем клики на кнопки действий
+        if (e.target.closest('.list-action-btn')) {
+            return;
+        }
+        
+        if (isSelectionMode) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Генерируем уникальный ID для списка, если его нет
+            let listId = listCard.dataset.listId || listCard.getAttribute('data-list-id');
+            if (!listId) {
+                // Генерируем уникальный ID с индексом карточки
+                const allCards = Array.from(listsGrid.querySelectorAll('.list-card'));
+                const cardIndex = allCards.indexOf(listCard);
+                listId = `list_${cardIndex}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                listCard.dataset.listId = listId;
+            }
+            
+            // Переключаем состояние выбора только для этой конкретной карточки
+            if (selectedLists.has(listId)) {
+                selectedLists.delete(listId);
+            } else {
+                selectedLists.add(listId);
+            }
+            
+            updateListCards();
+            updateSelectionControls();
+        }
+    });
+    
+    // Функция для переключения кнопки редактирования на кнопку удаления в режиме выбора
+    function toggleDeleteButtonInSelection(card, editBtn) {
+        const deleteBtn = card.querySelector('.list-action-btn.delete-btn');
+        const header = card.querySelector('.list-card-header');
+        
+        if (!header) return;
+        
+        if (deleteBtn) {
+            // Если кнопка удаления уже есть, возвращаем кнопку редактирования
+            const newEditBtn = document.createElement('button');
+            newEditBtn.className = 'list-action-btn edit-btn';
+            newEditBtn.title = 'Редактировать';
+            newEditBtn.innerHTML = `
+                <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+            `;
+            deleteBtn.parentNode.replaceChild(newEditBtn, deleteBtn);
+        } else {
+            // Заменяем кнопку редактирования на кнопку удаления
+            const newDeleteBtn = document.createElement('button');
+            newDeleteBtn.className = 'list-action-btn delete-btn';
+            newDeleteBtn.title = 'Удалить список';
+            newDeleteBtn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="list-action-icon">
+                    <path d="M3 6H5H21M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+            
+            editBtn.parentNode.replaceChild(newDeleteBtn, editBtn);
+            
+            // Обработчик клика на кнопку удаления
+            newDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteList(card);
+            });
+        }
+    }
+
+    // Обработчик для десктопной кнопки "Выбрать"
+    if (selectBtn) {
+        selectBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleSelectionMode();
+        });
+    }
+
+    // Обработчик для мобильной кнопки "Выбрать"
 if (selectButton) {
     selectButton.addEventListener('click', function(e) {
         e.stopPropagation();
-        // TODO: Добавить логику выбора списков
-        // Пока просто закрываем popover
+            toggleSelectionMode();
+        });
+    }
+
+    // Обработчик для кнопки удаления выбранных (десктоп)
+    if (deleteSelectedBtn) {
+        deleteSelectedBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSelectedLists();
+        });
+    }
+
+    // Обработчик для кнопки удаления выбранных (мобильный)
+    if (mobileDeleteSelectedBtn) {
+        mobileDeleteSelectedBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSelectedLists();
+            // Закрываем мобильное меню после удаления
         if (mobilePopover) {
             mobilePopover.classList.remove('active');
         }
     });
 }
+
+    // Инициализируем ID карточек при загрузке
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeListIds);
+    } else {
+        initializeListIds();
+    }
+})();
 
 // Управление popover сортировки
 const sortTrigger = document.getElementById('sortTrigger');
@@ -1249,6 +1718,33 @@ if (document.readyState === 'loading') {
 
     listsGrid.addEventListener('click', (e) => {
         const editBtn = e.target.closest('.list-action-btn.edit-btn');
+        const saveBtn = e.target.closest('.list-action-btn.save-btn');
+        
+        // Обработка кнопки сохранения
+        if (saveBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const header = saveBtn.closest('.list-card-header');
+            if (!header) return;
+            
+            const listCard = header.closest('.list-card');
+            if (!listCard) return;
+            
+            const input = header.querySelector('.list-card-title-input');
+            const titleEl = header.querySelector('.list-card-title');
+            
+            if (input && titleEl) {
+                const newValue = input.value.trim();
+                if (newValue.length > 0) {
+                    titleEl.textContent = newValue;
+                }
+                finishEditing(listCard, true);
+            }
+            return;
+        }
+        
+        // Обработка кнопки редактирования
         if (!editBtn) return;
 
         e.preventDefault();
@@ -1256,11 +1752,20 @@ if (document.readyState === 'loading') {
 
         const header = editBtn.closest('.list-card-header');
         if (!header) return;
+        
+        const listCard = header.closest('.list-card');
+        if (!listCard) return;
+
+        // В режиме выбора не редактируем название
+        // Логика показа кнопки удаления обрабатывается в initListSelectionMode
+        if (listCard.classList.contains('selection-mode')) {
+            return;
+        }
 
         const titleEl = header.querySelector('.list-card-title');
         if (!titleEl) return;
 
-        // Не создаем второе поле, если уже редактируем
+        // Если уже редактируем, просто фокусируемся
         const existingInput = header.querySelector('.list-card-title-input');
         if (existingInput) {
             existingInput.focus();
@@ -1268,33 +1773,72 @@ if (document.readyState === 'loading') {
             return;
         }
 
+        // Начинаем редактирование
+        startEditing(listCard, editBtn, titleEl);
+    });
+    
+    // Функция для начала редактирования
+    function startEditing(card, editBtn, titleEl) {
+        const header = editBtn.closest('.list-card-header');
+        if (!header) return;
+
         const currentText = titleEl.textContent || '';
 
+        // Создаем input для редактирования
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'list-card-title-input';
         input.value = currentText.trim();
         input.placeholder = 'Название списка';
 
-        // Скрываем заголовок, вставляем input перед кнопкой редактирования
+        // Скрываем заголовок, вставляем input
         titleEl.style.display = 'none';
         header.insertBefore(input, editBtn);
         input.focus();
         input.selectionStart = input.value.length;
+        
+        // Меняем иконку карандаша на галочку
+        editBtn.classList.remove('edit-btn');
+        editBtn.classList.add('save-btn');
+        editBtn.title = 'Сохранить';
+        editBtn.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="list-action-icon">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+        
+        // Заменяем кнопку "Поделиться" на кнопку удаления на её месте
+        convertShareToDelete(card);
+        
+        // Обработчики для завершения редактирования
+        let isFinishing = false;
 
         const finish = (save) => {
-            if (!input.parentElement) return;
+            if (isFinishing || !input.parentElement) return;
+            isFinishing = true;
+            
             if (save) {
                 const newValue = input.value.trim();
                 if (newValue.length > 0) {
                     titleEl.textContent = newValue;
                 }
             }
-            input.remove();
-            titleEl.style.display = '';
+            finishEditing(card, save);
         };
-
-        input.addEventListener('blur', () => finish(true));
+        
+        // Используем mousedown вместо blur, чтобы клик на кнопку сохранения обрабатывался
+        input.addEventListener('blur', (e) => {
+            // Проверяем, не кликнули ли на кнопку сохранения
+            const relatedTarget = e.relatedTarget;
+            if (relatedTarget && relatedTarget.closest('.list-action-btn.save-btn')) {
+                return; // Не завершаем, если кликнули на кнопку сохранения
+            }
+            setTimeout(() => {
+                if (!isFinishing) {
+                    finish(true);
+                }
+            }, 150);
+        });
 
         input.addEventListener('keydown', (ev) => {
             if (ev.key === 'Enter') {
@@ -1305,7 +1849,123 @@ if (document.readyState === 'loading') {
                 finish(false);
             }
         });
-    });
+    }
+    
+    // Функция для завершения редактирования
+    function finishEditing(card, save) {
+        const header = card.querySelector('.list-card-header');
+        if (!header) return;
+        
+        const input = header.querySelector('.list-card-title-input');
+        const titleEl = header.querySelector('.list-card-title');
+        const saveBtn = header.querySelector('.list-action-btn.save-btn');
+        
+        if (input) {
+            input.remove();
+        }
+        
+        if (titleEl) {
+            titleEl.style.display = '';
+        }
+        
+        // Возвращаем иконку карандаша
+        if (saveBtn) {
+            saveBtn.classList.remove('save-btn');
+            saveBtn.classList.add('edit-btn');
+            saveBtn.title = 'Редактировать';
+            saveBtn.innerHTML = `
+                <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+            `;
+        }
+        
+        // Возвращаем кнопку "Поделиться" на место кнопки удаления
+        convertDeleteToShare(card);
+    }
+    
+    // Функция для замены кнопки "Поделиться" на кнопку удаления
+    function convertShareToDelete(card) {
+        const shareBtn = card.querySelector('.list-action-btn.share-btn');
+        if (!shareBtn) return;
+        
+        // Сохраняем оригинальные данные для восстановления
+        if (!shareBtn.dataset.originalClass) {
+            shareBtn.dataset.originalClass = 'share-btn';
+            shareBtn.dataset.originalTitle = shareBtn.title;
+            shareBtn.dataset.originalHTML = shareBtn.innerHTML;
+        }
+        
+        // Заменяем на кнопку удаления
+        shareBtn.classList.remove('share-btn');
+        shareBtn.classList.add('delete-btn');
+        shareBtn.title = 'Удалить список';
+        shareBtn.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="list-action-icon">
+                <path d="M3 6H5H21M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+        
+        // Удаляем старый обработчик и добавляем новый для удаления
+        const newDeleteBtn = shareBtn.cloneNode(true);
+        shareBtn.parentNode.replaceChild(newDeleteBtn, shareBtn);
+        
+        // Обработчик клика на кнопку удаления
+        newDeleteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteListFromEditor(card);
+        });
+    }
+    
+    // Функция для возврата кнопки удаления обратно на кнопку "Поделиться"
+    function convertDeleteToShare(card) {
+        const deleteBtn = card.querySelector('.list-action-btn.delete-btn');
+        if (!deleteBtn) return;
+        
+        // Проверяем, была ли это кнопка "Поделиться"
+        if (deleteBtn.dataset.originalClass === 'share-btn') {
+            // Восстанавливаем оригинальную кнопку
+            const originalTitle = deleteBtn.dataset.originalTitle || 'Поделиться';
+            const originalHTML = deleteBtn.dataset.originalHTML || '';
+            
+            // Клонируем для удаления обработчика удаления
+            const newShareBtn = deleteBtn.cloneNode(true);
+            deleteBtn.parentNode.replaceChild(newShareBtn, deleteBtn);
+            
+            // Восстанавливаем классы и содержимое
+            newShareBtn.classList.remove('delete-btn');
+            newShareBtn.classList.add('share-btn');
+            newShareBtn.title = originalTitle;
+            newShareBtn.innerHTML = originalHTML;
+            
+            // Очищаем сохраненные данные
+            newShareBtn.removeAttribute('data-original-class');
+            newShareBtn.removeAttribute('data-original-title');
+            newShareBtn.removeAttribute('data-original-html');
+        }
+    }
+    
+    // Функция для удаления списка из редактора
+    function deleteListFromEditor(card) {
+        const listId = card.dataset.listId || card.getAttribute('data-list-id');
+        
+        if (confirm('Вы уверены, что хотите удалить этот список?')) {
+            // Удаляем из localStorage
+            try {
+                const stored = localStorage.getItem('mm_user_lists');
+                if (stored) {
+                    const lists = JSON.parse(stored);
+                    const filteredLists = lists.filter(list => list.id !== listId);
+                    localStorage.setItem('mm_user_lists', JSON.stringify(filteredLists));
+                }
+            } catch (e) {
+                console.error('Ошибка при удалении списка из localStorage:', e);
+            }
+            
+            // Удаляем карточку из DOM
+            card.remove();
+        }
+    }
 })();
 
 // ===== Шеринг списка (кнопка share-btn на странице "Мои списки") =====
