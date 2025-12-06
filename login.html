@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MEDIAMAN — Вход</title>
+
+    <!-- PWA / иконки такие же, как у основного сайта -->
+    <link rel="manifest" href="js/manifest.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/logos/app-icon-180.png">
+    <link rel="apple-touch-icon" href="images/logos/app-icon-180.png">
+    <link rel="icon" type="image/png" href="images/logos/Logo.png">
+
+    <!-- Шрифт и стили -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-icon">
+                    <img src="images/logos/Logo.png" alt="MEDIAMAN Logo">
+                </div>
+                <span class="auth-logo-text">MEDIAMAN</span>
+            </div>
+
+            <div class="auth-content">
+                <div class="auth-header">
+                    <h1 class="auth-title">Вход</h1>
+                    <p class="auth-subtitle">Войдите в свой аккаунт, чтобы продолжить</p>
+                </div>
+
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="your@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword" class="form-label">Пароль</label>
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Введите пароль"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" id="loginPasswordToggle" aria-label="Показать пароль">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember" class="checkbox-input">
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-text">Запомнить меня</span>
+                        </label>
+                        <a href="#" class="form-link">Забыли пароль?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange auth-submit">
+                        Войти
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>или</span>
+                </div>
+
+                <div class="auth-footer">
+                    <p class="auth-footer-text">
+                        Нет аккаунта? 
+                        <a href="register.html" class="auth-footer-link">Зарегистрироваться</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
+
+
+
+
