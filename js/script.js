@@ -921,6 +921,17 @@ if (desktopFilterButton && desktopFilterPopover) {
             this.classList.add('active');
         });
     });
+    
+    // Обработчик кнопки "Сбросить" для desktop фильтров
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Убираем активный класс у всех опций фильтров
+            desktopFilterPopover.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('active'));
+        });
+    }
 }
 
 // Управление popover фильтров (мобильная версия) - копия кода сортировки
@@ -968,6 +979,17 @@ if (filterButton && filterTrigger && filterPopover && mobilePopover) {
             this.classList.add('active');
         });
     });
+    
+    // Обработчик кнопки "Сбросить" для mobile фильтров
+    const resetFiltersMobileBtn = document.getElementById('resetFiltersMobile');
+    if (resetFiltersMobileBtn) {
+        resetFiltersMobileBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Убираем активный класс у всех опций фильтров
+            filterPopover.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('active'));
+        });
+    }
 }
 
 // Управление кнопками действий на странице карточки фильма
