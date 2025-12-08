@@ -1322,8 +1322,8 @@ body::after {
         justify-content: center;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        backdrop-filter: blur(3px) saturate(180%);
+        -webkit-backdrop-filter: blur(3px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 
             0 4px 16px rgba(0, 0, 0, 0.3),
@@ -2039,8 +2039,8 @@ body::after {
         padding: 6px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(5px) saturate(180%);
-        -webkit-backdrop-filter: blur(5px) saturate(180%);
+        backdrop-filter: blur(3px) saturate(180%);
+        -webkit-backdrop-filter: blur(3px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.12);
         box-shadow: 
             0 8px 32px rgba(0, 0, 0, 0.4),
@@ -2285,8 +2285,8 @@ body::after {
         justify-content: center;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(30px) saturate(180%);
-        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        backdrop-filter: blur(3px) saturate(180%);
+        -webkit-backdrop-filter: blur(3px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.12);
         box-shadow: 
             0 8px 32px rgba(0, 0, 0, 0.4),

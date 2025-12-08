@@ -16,7 +16,7 @@
 .list-card-description {
     margin-bottom: 32px;
     margin-top: 8px;
-    padding: 14px 20px;
+    padding: 18px 24px;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(18px) saturate(180%);
@@ -29,18 +29,18 @@
     align-items: center;
     gap: 16px;
     position: relative;               /* чтобы фиксировать кнопку внутри */
-    padding-right: 70px;              /* оставляем место под кнопку редактирования */
+    padding-right: 76px;              /* оставляем место под кнопку редактирования */
 }
 
 .list-card-description-text {
-    font-size: 16px;
+    font-size: 18px;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.5;
 }
 
 .list-card-description-edit {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 12px; /* квадрат с лёгким сглаживанием */
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(0, 0, 0, 0.45);
@@ -53,8 +53,8 @@
     cursor: pointer;
     transition: all 0.25s ease;
     position: absolute;               /* фиксируем к правому краю описания */
-    right: 16px;
-    top: 8px;                         /* прижимаем кнопку к верхнему краю */
+    right: 18px;
+    top: 10px;                         /* прижимаем кнопку к верхнему краю */
     box-shadow:
         0 6px 18px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
@@ -67,24 +67,24 @@
 }
 
 .list-card-description-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     filter: brightness(0) invert(1);
 }
 
 /* Поле редактирования описания в стиле жидкого стекла */
 .list-card-description-input {
     width: 100%;
-    min-height: 72px;
+    min-height: 80px;
     resize: vertical;
     border-radius: 24px;
-    padding: 10px 16px;
+    padding: 12px 18px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(10, 10, 20, 0.6);
     backdrop-filter: blur(22px) saturate(180%);
     -webkit-backdrop-filter: blur(22px) saturate(180%);
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     outline: none;
     box-shadow:
@@ -108,25 +108,25 @@
     .list-card-description {
         margin-top: 16px;
         margin-bottom: 24px;
-        padding: 12px 14px;
+        padding: 14px 18px;
         border-radius: 18px;
         align-items: flex-start;
-        padding-right: 60px; /* чуть меньше место под кнопку на мобилке */
+        padding-right: 64px; /* чуть меньше место под кнопку на мобилке */
     }
 
     .list-card-description-text {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .list-card-description-edit {
-        width: 30px;
-        height: 30px;
+        width: 34px;
+        height: 34px;
         border-radius: 8px;
     }
 
     .list-card-description-icon {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
     }
 }
 
@@ -155,8 +155,8 @@
         justify-content: center;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        backdrop-filter: blur(3px) saturate(180%);
+        -webkit-backdrop-filter: blur(3px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow:
             0 4px 16px rgba(0, 0, 0, 0.3),

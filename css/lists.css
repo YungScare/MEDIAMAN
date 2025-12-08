@@ -125,8 +125,8 @@
         justify-content: center;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        backdrop-filter: blur(3px) saturate(180%);
+        -webkit-backdrop-filter: blur(3px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 
             0 4px 16px rgba(0, 0, 0, 0.3),
@@ -524,11 +524,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 300;
 }
 
@@ -545,17 +546,46 @@
 .create-list-dialog {
     position: relative;
     width: min(500px, 92vw);
-    background: #0f0f14;
-    border: 1px solid #242533;
-    border-radius: 16px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    background: rgba(15, 15, 20, 0.4);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border-radius: 24px;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 0 8px 32px rgba(255, 255, 255, 0.05),
+        inset 0 -6px 20px rgba(0, 0, 0, 0.45),
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 20px 60px rgba(0, 0, 0, 0.3);
     padding: 24px;
     transform: translateY(12px);
-    transition: transform 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.create-list-dialog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        transparent
+    );
+    pointer-events: none;
 }
 
 .create-list-modal.active .create-list-dialog {
     transform: translateY(0);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 0 8px 32px rgba(255, 255, 255, 0.05),
+        inset 0 -6px 20px rgba(0, 0, 0, 0.45),
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 80px rgba(255, 255, 255, 0.05);
 }
 
 .create-list-header {
@@ -564,6 +594,8 @@
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
 }
 
 .create-list-title {
@@ -571,6 +603,8 @@
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .create-list-close {
@@ -579,17 +613,26 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 10px;
-    background: #181920;
-    border: 1px solid #242533;
+    border-radius: 12px;
+    background: rgba(24, 25, 32, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .create-list-close:hover {
-    background: #1f2029;
-    border-color: #2e3041;
+    background: rgba(31, 32, 41, 0.6);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
 }
 
 .create-list-close:active {
@@ -601,28 +644,44 @@
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .create-list-label {
     font-size: 14px;
-    color: #b0b4c0;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .create-list-input {
     width: 100%;
     padding: 12px 14px;
-    background: #16171f;
-    border: 1px solid #242533;
-    border-radius: 10px;
+    background: rgba(22, 23, 31, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
     color: #ffffff;
     font-size: 15px;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .create-list-input:focus {
     outline: none;
-    border-color: #f36e3f;
-    box-shadow: 0 0 0 3px rgba(243, 110, 63, 0.2);
+    background: rgba(22, 23, 31, 0.5);
+    border-color: rgba(243, 110, 63, 0.6);
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 3px rgba(243, 110, 63, 0.15),
+        0 4px 12px rgba(243, 110, 63, 0.1);
+}
+
+.create-list-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .create-list-error {
@@ -635,10 +694,28 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    position: relative;
+    z-index: 1;
 }
 
 .create-list-actions .btn {
     min-width: 120px;
+}
+
+.create-list-actions .btn-black {
+    background: rgba(255, 107, 53, 0.8);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.create-list-actions .btn-black:hover {
+    background: rgba(255, 107, 53, 0.9);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
+    transform: translateY(-2px);
 }
 
 @media (max-width: 480px) {
