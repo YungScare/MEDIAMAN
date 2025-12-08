@@ -99,9 +99,36 @@ if (mobileMenuToggle && mobilePopover) {
     const mobileDeleteSelectedBtn = document.getElementById('mobileDeleteSelectedBtn'); // Кнопка удаления выбранных (мобильный)
     const selectionCount = document.getElementById('selectionCount'); // Счетчик выбранных (десктоп)
     const mobileSelectionCount = document.getElementById('mobileSelectionCount'); // Счетчик выбранных (мобильный)
+    const mobileConfirmToggle = document.getElementById('mobileConfirmToggle'); // Мобильная кнопка подтверждения выбора
+    const mobileSelectionDeleteBar = document.getElementById('mobileSelectionDeleteBar'); // Нижняя кнопка удаления выбранных
+    const mobileSelectionBarCount = document.getElementById('mobileSelectionBarCount'); // Счетчик для нижней кнопки
+    const mobileMediaQuery = window.matchMedia('(max-width: 480px)');
     
     let isSelectionMode = false;
     const selectedLists = new Set();
+
+    function updateMobileSelectionLayout() {
+        const isMobile = mobileMediaQuery?.matches;
+        const body = document.body;
+
+        if (!body) return;
+
+        if (isSelectionMode && isMobile) {
+            body.classList.add('mobile-selection-mode');
+        } else {
+            body.classList.remove('mobile-selection-mode');
+        }
+
+        if (mobileSelectionDeleteBar) {
+            mobileSelectionDeleteBar.disabled = !isSelectionMode || selectedLists.size === 0;
+        }
+    }
+
+    if (mobileMediaQuery?.addEventListener) {
+        mobileMediaQuery.addEventListener('change', updateMobileSelectionLayout);
+    } else if (mobileMediaQuery?.addListener) {
+        mobileMediaQuery.addListener(updateMobileSelectionLayout);
+    }
 
     // Функция для включения/выключения режима выбора
     function toggleSelectionMode() {
@@ -122,6 +149,8 @@ if (mobileMenuToggle && mobilePopover) {
             updateSelectionControls();
         }
         
+        updateMobileSelectionLayout();
+
         // Закрываем мобильное меню
         if (mobilePopover) {
             mobilePopover.classList.remove('active');
@@ -361,6 +390,9 @@ if (mobileMenuToggle && mobilePopover) {
         if (mobileSelectionCount) {
             mobileSelectionCount.textContent = count;
         }
+        if (mobileSelectionBarCount) {
+            mobileSelectionBarCount.textContent = count;
+        }
         
         // Показываем/скрываем контролы в зависимости от режима и количества выбранных
         if (isSelectionMode) {
@@ -378,6 +410,8 @@ if (mobileMenuToggle && mobilePopover) {
                 mobileSelectionControls.style.display = 'none';
             }
         }
+
+        updateMobileSelectionLayout();
     }
 
     // Функция для удаления всех выбранных списков
@@ -529,9 +563,16 @@ if (mobileMenuToggle && mobilePopover) {
     }
 
     // Обработчик для мобильной кнопки "Выбрать"
-if (selectButton) {
-    selectButton.addEventListener('click', function(e) {
-        e.stopPropagation();
+    if (selectButton) {
+        selectButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleSelectionMode();
+        });
+    }
+
+    if (mobileConfirmToggle) {
+        mobileConfirmToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             toggleSelectionMode();
         });
     }
@@ -552,11 +593,21 @@ if (selectButton) {
             e.stopPropagation();
             deleteSelectedLists();
             // Закрываем мобильное меню после удаления
-        if (mobilePopover) {
-            mobilePopover.classList.remove('active');
-        }
-    });
-}
+            if (mobilePopover) {
+                mobilePopover.classList.remove('active');
+            }
+        });
+    }
+
+    if (mobileSelectionDeleteBar) {
+        mobileSelectionDeleteBar.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSelectedLists();
+        });
+    }
+
+    updateMobileSelectionLayout();
 
     // Инициализируем ID карточек при загрузке
     if (document.readyState === 'loading') {
