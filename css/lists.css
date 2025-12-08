@@ -370,8 +370,9 @@
 
 /* Кнопка удаления */
 .list-action-btn.delete-btn {
-    background: rgba(220, 53, 69, 0.1);
-    border-color: rgba(220, 53, 69, 0.1);
+    background: rgba(220, 53, 70, 0.2);
+    border-color: rgba(220, 53, 69, 0.2);
+    border-radius: 50%;
 }
 
 /* Кнопка удаления на месте кнопки "Поделиться" - приоритет позиционирования */
@@ -389,14 +390,20 @@
 
 /* Кнопка сохранения */
 .list-action-btn.save-btn {
-    background: rgba(195, 255, 200, 0.15);
+    background: rgba(122, 122, 122, 0.15);
     backdrop-filter: blur(10px);
+    border-radius: 50%;
 }
 
 .list-action-btn.save-btn:hover {
-    background: rgba(175, 255, 182, 0.3);
-    border-color: rgba(175, 255, 182, 0.3);
+    background: rgba(122, 122, 122, 0.3);
+    border-color: rgba(122, 122, 122, 0.3);
     transform: scale(1.1);
+}
+
+/* Кнопка удаления - круглая */
+.list-action-btn.delete-btn {
+    border-radius: 50%;
 }
 
 /* В режиме выбора скрываем обычные кнопки действий */
@@ -504,7 +511,9 @@
     }
 
     .list-action-btn.edit-btn,
-    .list-action-btn.share-btn {
+    .list-action-btn.share-btn,
+    .list-action-btn.save-btn,
+    .list-action-btn.delete-btn {
         border-radius: 50%;
     }
 
@@ -537,6 +546,150 @@
 
 /* Десктоп версия списков */
 @media (min-width: 481px) {
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 2K МОНИТОРОВ (2560x1440) ===== */
+@media (min-width: 2560px) {
+    /* Увеличиваем сетку списков */
+    .lists-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+    }
+
+    .list-card {
+        min-height: 320px;
+        padding: 32px;
+    }
+
+    .list-card-title {
+        font-size: 32px;
+        padding: 10px 16px;
+        min-height: 65px;
+        line-height: 1.3;
+    }
+
+    .list-card-title-input {
+        font-size: 28px;
+        padding: 10px 18px;
+    }
+
+    .list-card-quantity,
+    .list-card-date {
+        font-size: 20px;
+        padding: 0 16px;
+        height: 65px;
+        line-height: 65px;
+    }
+
+    .list-action-btn {
+        width: 65px;
+        height: 65px;
+    }
+
+    .list-action-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .page-title {
+        font-size: 64px;
+    }
+
+    .btn {
+        padding: 16px 32px;
+        font-size: 16px;
+    }
+
+    /* Модалка создания списка */
+    .create-list-dialog {
+        width: min(600px, 92vw);
+        padding: 32px;
+    }
+
+    .create-list-title {
+        font-size: 26px;
+    }
+
+    .create-list-input {
+        padding: 16px 18px;
+        font-size: 17px;
+    }
+
+    .create-list-label {
+        font-size: 16px;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 4K МОНИТОРОВ (3840x2160) ===== */
+@media (min-width: 3840px) {
+    /* Еще больше увеличиваем сетку списков */
+    .lists-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+    }
+
+    .list-card {
+        min-height: 380px;
+        padding: 40px;
+    }
+
+    .list-card-title {
+        font-size: 36px;
+        padding: 12px 20px;
+        min-height: 75px;
+        line-height: 1.3;
+    }
+
+    .list-card-title-input {
+        font-size: 32px;
+        padding: 12px 22px;
+    }
+
+    .list-card-quantity,
+    .list-card-date {
+        font-size: 24px;
+        padding: 0 20px;
+        height: 75px;
+        line-height: 75px;
+    }
+
+    .list-action-btn {
+        width: 75px;
+        height: 75px;
+    }
+
+    .list-action-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .page-title {
+        font-size: 80px;
+    }
+
+    .btn {
+        padding: 20px 40px;
+        font-size: 18px;
+    }
+
+    /* Модалка создания списка */
+    .create-list-dialog {
+        width: min(700px, 92vw);
+        padding: 40px;
+    }
+
+    .create-list-title {
+        font-size: 30px;
+    }
+
+    .create-list-input {
+        padding: 20px 24px;
+        font-size: 19px;
+    }
+
+    .create-list-label {
+        font-size: 18px;
+    }
 }
 
 /* ===== Модалка создания списка ===== */

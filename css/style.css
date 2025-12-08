@@ -1331,7 +1331,7 @@ body::after {
         color: #fff;
         cursor: pointer;
         z-index: 150;
-        transition: opacity 0.25s ease, transform 0.25s ease, background 0.3s ease, box-shadow 0.3s ease;
+        transition: opacity 0.25s ease, transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.15s ease;
         padding: 0;
         opacity: 1;
         pointer-events: auto;
@@ -1344,8 +1344,11 @@ body::after {
     }
 
     .mobile-menu-toggle:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.88);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.4),
+            inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .mobile-confirm-toggle {
@@ -2632,6 +2635,228 @@ body::after {
 @media (max-width: 480px) {
     .desktop-sort-popover {
         display: none !important;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 2K МОНИТОРОВ (2560x1440) ===== */
+@media (min-width: 2560px) {
+    /* Увеличиваем sidebar */
+    .sidebar {
+        width: 360px;
+        padding: 32px 28px;
+    }
+
+    .logo-text {
+        font-size: 28px;
+    }
+
+    .nav-item {
+        font-size: 18px;
+        padding: 14px 22px;
+    }
+
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .profile-avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .profile-name {
+        font-size: 16px;
+    }
+
+    .profile-handle {
+        font-size: 14px;
+    }
+
+    /* Увеличиваем основной контент */
+    .main-content {
+        margin-left: 360px;
+        padding: 60px;
+    }
+
+    .page-title {
+        font-size: 64px;
+        letter-spacing: 3px;
+    }
+
+    /* Увеличиваем кнопки */
+    .btn {
+        padding: 16px 32px;
+        font-size: 16px;
+    }
+
+    .search-box {
+        min-width: 400px;
+        padding: 16px 28px;
+    }
+
+    .search-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .search-input {
+        font-size: 16px;
+    }
+
+    /* Увеличиваем сетку каталога */
+    .catalog-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 32px;
+    }
+
+    .catalog-item {
+        max-width: 280px;
+    }
+
+    .poster-image {
+        width: 280px;
+        height: 400px;
+    }
+
+    .detail-title {
+        font-size: 20px;
+    }
+
+    .detail-meta,
+    .detail-genres {
+        font-size: 18px;
+    }
+
+    /* Увеличиваем popover */
+    .desktop-sort-popover {
+        min-width: 380px;
+        padding: 24px 0;
+    }
+
+    .desktop-sort-popover .sort-option {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    #desktopFilterPopover {
+        min-width: 680px;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 4K МОНИТОРОВ (3840x2160) ===== */
+@media (min-width: 3840px) {
+    /* Еще больше увеличиваем sidebar */
+    .sidebar {
+        width: 440px;
+        padding: 40px 36px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo-text {
+        font-size: 32px;
+    }
+
+    .nav-item {
+        font-size: 20px;
+        padding: 16px 26px;
+    }
+
+    .nav-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .profile-avatar {
+        width: 56px;
+        height: 56px;
+    }
+
+    .profile-name {
+        font-size: 18px;
+    }
+
+    .profile-handle {
+        font-size: 16px;
+    }
+
+    /* Еще больше увеличиваем основной контент */
+    .main-content {
+        margin-left: 440px;
+        padding: 80px;
+    }
+
+    .page-title {
+        font-size: 80px;
+        letter-spacing: 4px;
+    }
+
+    /* Еще больше увеличиваем кнопки */
+    .btn {
+        padding: 20px 40px;
+        font-size: 18px;
+    }
+
+    .search-box {
+        min-width: 500px;
+        padding: 20px 36px;
+    }
+
+    .search-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .search-input {
+        font-size: 18px;
+    }
+
+    /* Еще больше увеличиваем сетку каталога */
+    .catalog-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 40px;
+    }
+
+    .catalog-item {
+        max-width: 340px;
+    }
+
+    .poster-image {
+        width: 340px;
+        height: 488px;
+    }
+
+    .detail-title {
+        font-size: 24px;
+    }
+
+    .detail-meta,
+    .detail-genres {
+        font-size: 20px;
+    }
+
+    /* Еще больше увеличиваем popover */
+    .desktop-sort-popover {
+        min-width: 460px;
+        padding: 28px 0;
+    }
+
+    .desktop-sort-popover .sort-option {
+        padding: 14px 24px;
+        font-size: 18px;
+    }
+
+    #desktopFilterPopover {
+        min-width: 800px;
+        padding: 20px 0;
+    }
+
+    .content-header {
+        margin-bottom: 60px;
     }
 }
 

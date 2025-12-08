@@ -16,26 +16,78 @@
 .list-card-description {
     margin-bottom: 32px;
     margin-top: 8px;
-    padding: 18px 24px;
+    padding: 18px 24px 18px 0;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     position: relative;               /* чтобы фиксировать кнопку внутри */
     padding-right: 76px;              /* оставляем место под кнопку редактирования */
+}
+
+.list-card-description-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .list-card-description-text {
     font-size: 18px;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.5;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    overflow: hidden;
+    margin: 0;
+}
+
+.list-card-description-text.collapsed {
+    max-height: 4.5em; /* Примерно 3 строки при line-height 1.5 */
+    position: relative;
+}
+
+.list-card-description-text.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2em;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.95));
+    pointer-events: none;
+}
+
+.list-card-description-text.expanded {
+    max-height: 2000px;
+}
+
+.list-card-description-more-btn {
+    margin-top: 0;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1000px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none; /* По умолчанию скрыта, показывается только если текст длинный */
+    align-self: flex-start;
+}
+
+.list-card-description-more-btn.visible {
+    display: inline-block;
+}
+
+.list-card-description-more-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
 }
 
 .list-card-description-edit {
@@ -58,6 +110,8 @@
     box-shadow:
         0 6px 18px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    flex-shrink: 0;
+    z-index: 10;
 }
 
 .list-card-description-edit:hover {
@@ -84,12 +138,14 @@
     backdrop-filter: blur(22px) saturate(180%);
     -webkit-backdrop-filter: blur(22px) saturate(180%);
     color: #fff;
-    font-size: 16px;
+    font-size: 18px;
+    line-height: 1.5;
     font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     outline: none;
     box-shadow:
         0 10px 30px rgba(0, 0, 0, 0.6),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin: 0;
 }
 
 .list-card-description-input::placeholder {
@@ -108,7 +164,7 @@
     .list-card-description {
         margin-top: 16px;
         margin-bottom: 24px;
-        padding: 14px 18px;
+        padding: 14px 18px 14px 0;
         border-radius: 18px;
         align-items: flex-start;
         padding-right: 64px; /* чуть меньше место под кнопку на мобилке */
@@ -116,6 +172,22 @@
 
     .list-card-description-text {
         font-size: 16px;
+    }
+
+    .list-card-description-text.collapsed {
+        max-height: 4.8em; /* Примерно 3 строки при line-height 1.5 и font-size 16px */
+    }
+
+    .list-card-description-more-btn {
+        font-size: 13px;
+        padding: 5px 14px;
+    }
+
+    .list-card-description-input {
+        width: 100%;
+        font-size: 16px;
+        margin: 0;
+        border-radius: 15px;
     }
 
     .list-card-description-edit {
@@ -164,7 +236,7 @@
         color: #fff;
         cursor: pointer;
         z-index: 150;
-        transition: all 0.3s ease;
+        transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.15s ease;
         padding: 0;
         text-decoration: none;
     }
@@ -184,8 +256,11 @@
     }
 
     .mobile-back-button:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.88);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.4),
+            inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .mobile-back-button svg {
@@ -202,7 +277,7 @@
 
 @media (max-width: 480px) {
     .list-card-main .content-header {
-        margin-top: 32px;
+        margin-top: 90px;
     }
 }
 
@@ -253,6 +328,86 @@
     /* скрываем десктопную кнопку "Назад" в мобильной версии */
     .back-button {
         display: none;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 2K МОНИТОРОВ (2560x1440) ===== */
+@media (min-width: 2560px) {
+    .list-card-description {
+        padding: 24px 32px;
+        padding-right: 96px;
+        margin-bottom: 40px;
+    }
+
+    .list-card-description-text {
+        font-size: 20px;
+    }
+
+    .list-card-description-edit {
+        width: 48px;
+        height: 48px;
+        right: 24px;
+    }
+
+    .list-card-description-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .list-card-description-input {
+        font-size: 18px;
+        padding: 16px 24px;
+        min-height: 100px;
+    }
+
+    .back-button {
+        padding: 14px 28px;
+        font-size: 18px;
+    }
+
+    .back-button svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 4K МОНИТОРОВ (3840x2160) ===== */
+@media (min-width: 3840px) {
+    .list-card-description {
+        padding: 32px 40px;
+        padding-right: 120px;
+        margin-bottom: 50px;
+    }
+
+    .list-card-description-text {
+        font-size: 24px;
+    }
+
+    .list-card-description-edit {
+        width: 56px;
+        height: 56px;
+        right: 30px;
+    }
+
+    .list-card-description-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .list-card-description-input {
+        font-size: 20px;
+        padding: 20px 30px;
+        min-height: 120px;
+    }
+
+    .back-button {
+        padding: 18px 36px;
+        font-size: 20px;
+    }
+
+    .back-button svg {
+        width: 28px;
+        height: 28px;
     }
 }
 

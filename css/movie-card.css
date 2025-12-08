@@ -1040,6 +1040,178 @@
     }
 }
 
+/* ===== АДАПТАЦИЯ ДЛЯ 2K МОНИТОРОВ (2560x1440) ===== */
+@media (min-width: 2560px) {
+    .movie-card-header {
+        padding: 32px 60px;
+        margin-bottom: 50px;
+    }
+
+    .movie-header-left {
+        gap: 50px;
+    }
+
+    .back-button {
+        padding: 14px 28px;
+        font-size: 18px;
+    }
+
+    .back-button svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .movie-card-content {
+        gap: 50px;
+        padding: 0 60px 60px;
+        max-width: 1800px;
+    }
+
+    .poster-wrapper {
+        width: 400px;
+        gap: 32px;
+    }
+
+    .movie-title {
+        font-size: 60px;
+    }
+
+    .action-btn {
+        padding: 14px 24px;
+        font-size: 18px;
+    }
+
+    .action-btn svg,
+    .action-btn img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .description-text {
+        font-size: 18px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .about-label {
+        font-size: 16px;
+    }
+
+    .about-value {
+        font-size: 18px;
+    }
+
+    .cast-item {
+        font-size: 18px;
+    }
+
+    .rating-label {
+        font-size: 20px;
+    }
+
+    .popcorn-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .iconic-badge {
+        width: 56px;
+        height: 56px;
+    }
+
+    .user-rating-display {
+        font-size: 20px;
+    }
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ 4K МОНИТОРОВ (3840x2160) ===== */
+@media (min-width: 3840px) {
+    .movie-card-header {
+        padding: 40px 80px;
+        margin-bottom: 60px;
+    }
+
+    .movie-header-left {
+        gap: 60px;
+    }
+
+    .back-button {
+        padding: 18px 36px;
+        font-size: 20px;
+    }
+
+    .back-button svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .movie-card-content {
+        gap: 60px;
+        padding: 0 80px 80px;
+        max-width: 2200px;
+    }
+
+    .poster-wrapper {
+        width: 480px;
+        gap: 40px;
+    }
+
+    .movie-title {
+        font-size: 72px;
+    }
+
+    .action-btn {
+        padding: 18px 30px;
+        font-size: 20px;
+    }
+
+    .action-btn svg,
+    .action-btn img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .description-text {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .about-label {
+        font-size: 18px;
+    }
+
+    .about-value {
+        font-size: 20px;
+    }
+
+    .cast-item {
+        font-size: 20px;
+    }
+
+    .rating-label {
+        font-size: 24px;
+    }
+
+    .popcorn-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .iconic-badge {
+        width: 64px;
+        height: 64px;
+    }
+
+    .user-rating-display {
+        font-size: 22px;
+    }
+}
+
 /* ===== МОДАЛЬНОЕ ОКНО ВЫБОРА СПИСКА ===== */
 .add-to-list-modal {
     position: fixed;
@@ -1303,6 +1475,88 @@
 
     .add-to-list-item-name {
         font-size: 15px;
+    }
+}
+
+/* Адаптация модального окна для 2K */
+@media (min-width: 2560px) {
+    .add-to-list-modal-content {
+        max-width: 600px;
+    }
+
+    .add-to-list-modal-header {
+        padding: 28px;
+    }
+
+    .add-to-list-modal-title {
+        font-size: 28px;
+    }
+
+    .add-to-list-modal-body {
+        padding: 28px;
+    }
+
+    .add-to-list-item {
+        padding: 18px 24px;
+    }
+
+    .add-to-list-item-name {
+        font-size: 18px;
+    }
+
+    .add-to-list-item-count {
+        font-size: 16px;
+    }
+
+    .add-to-list-item-check {
+        width: 28px;
+        height: 28px;
+    }
+
+    .add-to-list-item-check svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Адаптация модального окна для 4K */
+@media (min-width: 3840px) {
+    .add-to-list-modal-content {
+        max-width: 700px;
+    }
+
+    .add-to-list-modal-header {
+        padding: 36px;
+    }
+
+    .add-to-list-modal-title {
+        font-size: 32px;
+    }
+
+    .add-to-list-modal-body {
+        padding: 36px;
+    }
+
+    .add-to-list-item {
+        padding: 22px 30px;
+    }
+
+    .add-to-list-item-name {
+        font-size: 20px;
+    }
+
+    .add-to-list-item-count {
+        font-size: 18px;
+    }
+
+    .add-to-list-item-check {
+        width: 32px;
+        height: 32px;
+    }
+
+    .add-to-list-item-check svg {
+        width: 28px;
+        height: 28px;
     }
 }
 

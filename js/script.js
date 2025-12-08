@@ -1847,13 +1847,133 @@ if (document.readyState === 'loading') {
 
     const textEl = descriptionSection.querySelector('.list-card-description-text');
     const editBtn = descriptionSection.querySelector('.list-card-description-edit');
+    const moreBtn = descriptionSection.querySelector('.list-card-description-more-btn');
+    const wrapper = descriptionSection.querySelector('.list-card-description-wrapper');
     if (!textEl || !editBtn) return;
 
-    let isEditing = false;
+    const iconEl = editBtn.querySelector('.list-card-description-icon');
+    if (!iconEl) return;
 
-    editBtn.addEventListener('click', () => {
-        if (isEditing) return;
+    let isEditing = false;
+    let currentTextarea = null;
+    let blurHandler = null;
+    let isButtonClick = false; // Флаг для отслеживания клика на кнопку сохранения
+
+    // Функция для проверки, нужно ли показывать кнопку "ЕЩЕ"
+    function checkIfNeedsToggle() {
+        if (!moreBtn) return;
+        
+        // Временно убираем класс collapsed для измерения
+        const wasCollapsed = textEl.classList.contains('collapsed');
+        textEl.classList.remove('collapsed', 'expanded');
+        textEl.style.maxHeight = 'none';
+        
+        const fullHeight = textEl.scrollHeight;
+        const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight);
+        const collapsedHeight = lineHeight * 3; // Примерно 3 строки
+        
+        // Восстанавливаем состояние
+        textEl.style.maxHeight = '';
+        if (wasCollapsed) {
+            textEl.classList.add('collapsed');
+        }
+        
+        return fullHeight > collapsedHeight;
+    }
+
+    // Инициализация состояния кнопки "ЕЩЕ"
+    function initToggleButton() {
+        if (!moreBtn) return;
+        
+        if (checkIfNeedsToggle()) {
+            textEl.classList.add('collapsed');
+            moreBtn.classList.add('visible');
+            moreBtn.textContent = 'ЕЩЕ';
+        } else {
+            textEl.classList.remove('collapsed', 'expanded');
+            moreBtn.classList.remove('visible');
+        }
+    }
+
+    // Обработчик клика на кнопку "ЕЩЕ"
+    if (moreBtn) {
+        moreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (textEl.classList.contains('collapsed')) {
+                // Раскрываем
+                textEl.classList.remove('collapsed');
+                textEl.classList.add('expanded');
+                moreBtn.textContent = 'СВЕРНУТЬ';
+            } else {
+                // Сворачиваем
+                textEl.classList.remove('expanded');
+                textEl.classList.add('collapsed');
+                moreBtn.textContent = 'ЕЩЕ';
+            }
+        });
+    }
+
+    const finishEditing = (save) => {
+        if (!isEditing || !currentTextarea) return;
+        
+        if (save) {
+            const newText = currentTextarea.value.trim();
+            if (newText.length > 0) {
+                textEl.textContent = newText;
+            }
+        }
+        
+        // Удаляем обработчик blur перед удалением textarea
+        if (blurHandler && currentTextarea) {
+            currentTextarea.removeEventListener('blur', blurHandler);
+        }
+        
+        // Удаляем textarea
+        const textarea = currentTextarea;
+        currentTextarea = null;
+        textarea.remove();
+        
+        textEl.style.display = '';
+        isEditing = false;
+        blurHandler = null;
+        isButtonClick = false;
+        
+        // Возвращаем иконку карандаша
+        iconEl.src = 'images/icons/pencil-fill.svg';
+        editBtn.title = 'Редактировать описание';
+        
+        // Показываем кнопку "ЕЩЕ" обратно и обновляем её состояние после сохранения
+        if (moreBtn) {
+            moreBtn.style.display = '';
+        }
+        setTimeout(() => {
+            initToggleButton();
+        }, 0);
+    };
+
+    editBtn.addEventListener('mousedown', (e) => {
+        if (isEditing) {
+            // Устанавливаем флаг, что был клик на кнопке сохранения
+            isButtonClick = true;
+            e.preventDefault();
+        }
+    });
+
+    editBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (isEditing) {
+            // Если уже в режиме редактирования, сохраняем изменения
+            isButtonClick = true;
+            finishEditing(true);
+            return;
+        }
+        
         isEditing = true;
+        isButtonClick = false;
 
         const currentText = textEl.textContent || '';
 
@@ -1865,26 +1985,42 @@ if (document.readyState === 'loading') {
         // Базовые стили через inline, остальное — через CSS по классу
         textarea.rows = 3;
 
-        // Скрываем исходный текст и вставляем textarea
+        // Скрываем исходный текст и кнопку "ЕЩЕ", вставляем textarea в wrapper
         textEl.style.display = 'none';
-        descriptionSection.insertBefore(textarea, editBtn);
+        if (moreBtn) {
+            moreBtn.style.display = 'none';
+        }
+        // Вставляем textarea в wrapper вместо текста, чтобы сохранить ширину
+        if (wrapper) {
+            wrapper.insertBefore(textarea, wrapper.firstChild);
+        } else {
+            descriptionSection.insertBefore(textarea, editBtn);
+        }
         textarea.focus();
         textarea.selectionStart = textarea.value.length;
+        
+        currentTextarea = textarea;
 
-        const finishEditing = (save) => {
-            if (!isEditing) return;
-            if (save) {
-                const newText = textarea.value.trim();
-                if (newText.length > 0) {
-                    textEl.textContent = newText;
+        // Меняем иконку на галочку
+        iconEl.src = 'images/icons/check2.svg';
+        editBtn.title = 'Сохранить описание';
+
+        // Создаем обработчик blur с задержкой, чтобы дать время клику на кнопку
+        blurHandler = () => {
+            // Используем setTimeout, чтобы клик на кнопку успел сработать
+            setTimeout(() => {
+                // Если был клик на кнопке, не сохраняем через blur
+                if (isButtonClick) {
+                    isButtonClick = false;
+                    return;
                 }
-            }
-            textarea.remove();
-            textEl.style.display = '';
-            isEditing = false;
+                if (isEditing && currentTextarea === textarea) {
+                    finishEditing(true);
+                }
+            }, 150);
         };
-
-        textarea.addEventListener('blur', () => finishEditing(true));
+        
+        textarea.addEventListener('blur', blurHandler);
 
         textarea.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -1895,6 +2031,20 @@ if (document.readyState === 'loading') {
                 finishEditing(false);
             }
         });
+    });
+    
+    // Инициализируем состояние кнопки "ЕЩЕ" при загрузке
+    initToggleButton();
+    
+    // Перепроверяем при изменении размера окна (на случай изменения ширины)
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (!isEditing) {
+                initToggleButton();
+            }
+        }, 250);
     });
 })();
 
@@ -2081,6 +2231,40 @@ if (document.readyState === 'loading') {
 (function initListTitleEditor() {
     const listsGrid = document.getElementById('listsGrid');
     if (!listsGrid) return; // только на my-lists.html
+
+    // Предотвращаем переход по ссылке карточки, если идет редактирование
+    listsGrid.addEventListener('click', (e) => {
+        // Разрешаем клики на кнопки сохранения и удаления
+        const saveBtn = e.target.closest('.list-action-btn.save-btn');
+        const deleteBtn = e.target.closest('.list-action-btn.delete-btn');
+        if (saveBtn || deleteBtn) {
+            // Не блокируем клики на эти кнопки
+            return;
+        }
+        
+        // Проверяем, кликнули ли на input или его родительские элементы
+        const input = e.target.closest('.list-card-title-input');
+        if (input) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+        
+        // Проверяем, кликнули ли на карточку, которая находится в режиме редактирования
+        const listCard = e.target.closest('.list-card');
+        if (listCard && listCard.tagName === 'A') {
+            const header = listCard.querySelector('.list-card-header');
+            if (header) {
+                const editingInput = header.querySelector('.list-card-title-input');
+                if (editingInput) {
+                    // Если есть input для редактирования, предотвращаем переход
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+            }
+        }
+    }, true); // Используем capture phase, чтобы перехватить до перехода по ссылке
 
     listsGrid.addEventListener('click', (e) => {
         const editBtn = e.target.closest('.list-action-btn.edit-btn');
