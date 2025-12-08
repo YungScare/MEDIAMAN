@@ -134,8 +134,11 @@
         color: #fff;
         cursor: pointer;
         z-index: 150;
-        transition: all 0.3s ease;
+        transition: opacity 0.25s ease, transform 0.25s ease, background 0.3s ease, box-shadow 0.3s ease;
         padding: 0;
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
     }
 
     .mobile-add-btn:hover {

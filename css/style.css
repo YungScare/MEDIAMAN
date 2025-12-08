@@ -1310,7 +1310,8 @@ body::after {
     }
 
     /* ===== КНОПКА С ТРЕМЯ ТОЧКАМИ ===== */
-    .mobile-menu-toggle {
+    .mobile-menu-toggle,
+    .mobile-confirm-toggle {
         position: fixed;
         top: 30px;
         right: 20px;
@@ -1330,8 +1331,11 @@ body::after {
         color: #fff;
         cursor: pointer;
         z-index: 150;
-        transition: all 0.3s ease;
+        transition: opacity 0.25s ease, transform 0.25s ease, background 0.3s ease, box-shadow 0.3s ease;
         padding: 0;
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
     }
 
     .mobile-menu-toggle:hover {
@@ -1342,6 +1346,30 @@ body::after {
     .mobile-menu-toggle:active {
         transform: scale(0.95);
         background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-confirm-toggle {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.95);
+    }
+
+    body.mobile-selection-mode .mobile-menu-toggle {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+    }
+
+    body.mobile-selection-mode .mobile-confirm-toggle {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+    }
+
+    body.mobile-selection-mode .mobile-add-btn {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
     }
 
     .three-dots-icon {
@@ -1979,6 +2007,17 @@ body::after {
         transition: gap 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
 
+    body.mobile-selection-mode .sidebar-nav,
+    body.mobile-selection-mode .mobile-search-btn {
+        opacity: 0;
+        transform: translateX(-12px);
+        pointer-events: none;
+    }
+
+    body.mobile-selection-mode .sidebar-content {
+        gap: 0;
+    }
+
     /* Уменьшаем gap при активном поиске для более компактного вида */
     .sidebar:has(.mobile-search-btn.search-active) .sidebar-content {
         gap: 4px;
@@ -2460,6 +2499,66 @@ body::after {
         }
     }
 
+    /* ===== РЕЖИМ ВЫБОРА (МОБИЛЬНЫЙ) ===== */
+    .mobile-selection-delete {
+        display: none;
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 56px;
+        height: 56px;
+        padding: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        color: #DC3545;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        position: fixed;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        z-index: 210;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        transform: none;
+        overflow: visible;
+    }
+
+    .mobile-selection-delete:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .mobile-selection-delete-icon {
+        width: 24px;
+        height: 24px;
+        color: #DC3545;
+    }
+
+    .mobile-selection-delete .mobile-selection-count {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    body.mobile-selection-mode .mobile-selection-delete {
+        display: flex;
+    }
+
     /* Адаптация для маленьких экранов */
     @media (max-width: 400px) {
         .sidebar-content {
@@ -2501,9 +2600,12 @@ body::after {
 /* Скрываем мобильные элементы на desktop */
 @media (min-width: 481px) {
     .mobile-menu-toggle,
+    .mobile-confirm-toggle,
+    .mobile-add-btn,
     .mobile-popover,
     .mobile-search-btn,
-    .mobile-profile-avatar {
+    .mobile-profile-avatar,
+    .mobile-selection-delete {
         display: none !important;
     }
 
