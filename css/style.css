@@ -1067,25 +1067,22 @@ body::after {
     position: absolute;
     bottom: 0;
     left: 0;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.6);
+    /* backdrop-filter: blur(20px) saturate(180%); */
+    /* -webkit-backdrop-filter: blur(20px) saturate(180%); */
     color: #fff;
     padding: 4px 12px;
-    border-top-right-radius: 12px;
-    border-bottom-left-radius: 12px;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 0 12px 0 12px; /* верхний правый и нижний левый */
     font-size: 12px;
     font-weight: 400;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
     border: 1px solid rgba(255, 255, 255, 0.25);
-    border-bottom: none;
-    border-left: none;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     z-index: 2;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     overflow: hidden;
+    transition: border-radius 0s;
 }
 
 .poster-seasons-tag::before {
@@ -1100,6 +1097,7 @@ body::after {
     animation: tagBlob 8s ease-in-out infinite;
     z-index: 0;
     pointer-events: none;
+    border-radius: inherit;
 }
 
 .poster-seasons-tag > * {

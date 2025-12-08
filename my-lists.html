@@ -374,6 +374,30 @@
         </main>
     </div>
 
+    <!-- Модальное окно создания списка -->
+    <div class="create-list-modal" id="createListModal" aria-hidden="true">
+        <div class="create-list-overlay" id="createListOverlay"></div>
+        <div class="create-list-dialog">
+            <div class="create-list-header">
+                <h2 class="create-list-title">Новый список</h2>
+                <button class="create-list-close" id="createListClose" type="button" aria-label="Закрыть">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="create-list-body">
+                <label class="create-list-label" for="createListName">Название списка</label>
+                <input type="text" id="createListName" class="create-list-input" placeholder="Например, «Посмотреть зимой»" maxlength="120">
+                <div class="create-list-error" id="createListError"></div>
+            </div>
+            <div class="create-list-actions">
+                <button class="btn btn-black" id="createListSave" type="button">Сохранить</button>
+                <button class="btn btn-secondary" id="createListCancel" type="button">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Баннер cookies -->
     <div class="cookie-banner" id="cookieBanner" aria-live="polite">
         <div class="cookie-banner__inner">

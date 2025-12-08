@@ -566,6 +566,225 @@ if (selectButton) {
     }
 })();
 
+// Вспомогательные функции для карточек списков
+function formatListDate(dateString) {
+    const date = dateString ? new Date(dateString) : new Date();
+    const safeDate = isNaN(date.getTime()) ? new Date() : date;
+    const day = String(safeDate.getDate()).padStart(2, '0');
+    const month = String(safeDate.getMonth() + 1).padStart(2, '0');
+    const year = String(safeDate.getFullYear()).slice(-2);
+    return `${day}.${month}.${year}`;
+}
+
+function createListCardElement(list) {
+    const id = list?.id || `list_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const itemsCount = Array.isArray(list?.items) ? list.items.length : 0;
+    const card = document.createElement('a');
+    card.href = 'list-card.html';
+    card.className = 'list-card';
+    card.dataset.listId = id;
+
+    const header = document.createElement('div');
+    header.className = 'list-card-header';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'list-card-title';
+    titleEl.textContent = list?.name?.trim() || 'Без названия';
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'list-action-btn edit-btn';
+    editBtn.title = 'Редактировать';
+    editBtn.innerHTML = `
+        <img src="images/icons/pencil-fill.svg" alt="Редактировать" class="list-action-icon">
+    `;
+
+    header.appendChild(titleEl);
+    header.appendChild(editBtn);
+
+    const info = document.createElement('div');
+    info.className = 'list-card-info';
+
+    const quantity = document.createElement('div');
+    quantity.className = 'list-card-quantity';
+    quantity.textContent = `Количество: ${itemsCount}`;
+
+    const infoRight = document.createElement('div');
+    infoRight.className = 'list-card-info-right';
+
+    const dateEl = document.createElement('div');
+    dateEl.className = 'list-card-date';
+    dateEl.textContent = `Дата создания: ${formatListDate(list?.createdAt)}`;
+
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'list-action-btn share-btn';
+    shareBtn.title = 'Поделиться';
+    shareBtn.innerHTML = `
+        <img src="images/icons/box-arrow-up.svg" alt="Поделиться" class="list-action-icon">
+    `;
+
+    infoRight.appendChild(dateEl);
+    infoRight.appendChild(shareBtn);
+
+    info.appendChild(quantity);
+    info.appendChild(infoRight);
+
+    card.appendChild(header);
+    card.appendChild(info);
+
+    return card;
+}
+
+function renderListsGrid(listsGrid, lists) {
+    if (!listsGrid || !Array.isArray(lists)) return;
+    listsGrid.innerHTML = '';
+    lists.forEach((list) => {
+        const card = createListCardElement(list);
+        listsGrid.appendChild(card);
+    });
+}
+
+// ===== Создание нового списка на странице "Мои списки" =====
+(function initCreateListModal() {
+    const listsGrid = document.getElementById('listsGrid');
+    const addListBtn = document.getElementById('addListBtn');
+    const mobileAddBtn = document.getElementById('mobileAddBtn');
+    const modal = document.getElementById('createListModal');
+    const overlay = document.getElementById('createListOverlay');
+    const closeBtn = document.getElementById('createListClose');
+    const cancelBtn = document.getElementById('createListCancel');
+    const saveBtn = document.getElementById('createListSave');
+    const nameInput = document.getElementById('createListName');
+    const errorEl = document.getElementById('createListError');
+    const mobilePopoverRef = document.getElementById('mobilePopover');
+
+    if (!listsGrid || !modal || (!addListBtn && !mobileAddBtn)) return;
+
+    function getListsFromStorage() {
+        try {
+            const stored = localStorage.getItem('mm_user_lists');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Ошибка при чтении списков из localStorage:', e);
+        }
+        return [];
+    }
+
+    function saveListsToStorage(lists) {
+        try {
+            localStorage.setItem('mm_user_lists', JSON.stringify(lists));
+        } catch (e) {
+            console.error('Ошибка при сохранении списков в localStorage:', e);
+        }
+    }
+
+    function renderFromStorage() {
+        const lists = getListsFromStorage();
+        if (lists.length > 0) {
+            renderListsGrid(listsGrid, lists);
+        }
+    }
+
+    function openModal() {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        if (mobilePopoverRef) {
+            mobilePopoverRef.classList.remove('active');
+        }
+        document.body.style.overflow = 'hidden';
+        if (nameInput) {
+            nameInput.value = '';
+            nameInput.focus();
+        }
+        if (errorEl) {
+            errorEl.textContent = '';
+        }
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (errorEl) {
+            errorEl.textContent = '';
+        }
+    }
+
+    function handleSave() {
+        if (!nameInput) return;
+        const trimmedName = nameInput.value.trim();
+        if (!trimmedName) {
+            if (errorEl) errorEl.textContent = 'Введите название списка';
+            nameInput.focus();
+            return;
+        }
+
+        const lists = getListsFromStorage();
+        const exists = lists.some(
+            (list) => list?.name?.toLowerCase() === trimmedName.toLowerCase()
+        );
+        if (exists) {
+            if (errorEl) errorEl.textContent = 'Такой список уже есть';
+            return;
+        }
+
+        const newList = {
+            id: `list_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: trimmedName,
+            items: [],
+            createdAt: new Date().toISOString()
+        };
+
+        lists.unshift(newList);
+        saveListsToStorage(lists);
+        renderListsGrid(listsGrid, lists);
+        closeModal();
+    }
+
+    // Первичная отрисовка сохраненных списков
+    renderFromStorage();
+
+    [addListBtn, mobileAddBtn]
+        .filter(Boolean)
+        .forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+    if (overlay) {
+        overlay.addEventListener('click', closeModal);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeModal);
+    }
+    if (saveBtn) {
+        saveBtn.addEventListener('click', handleSave);
+    }
+    if (nameInput) {
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSave();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closeModal();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+})();
+
 // Управление popover сортировки
 const sortTrigger = document.getElementById('sortTrigger');
 const sortPopover = document.getElementById('sortPopover');
@@ -1606,6 +1825,80 @@ if (document.readyState === 'loading') {
     });
 })();
 
+// ===== Раскрытие/сворачивание описания фильма/сериала =====
+(function initDescriptionToggle() {
+    const movieDescriptions = document.querySelectorAll('.movie-description');
+    
+    movieDescriptions.forEach(descriptionSection => {
+        const textEl = descriptionSection.querySelector('.description-text');
+        const btn = descriptionSection.querySelector('.show-more-btn');
+        
+        if (!textEl || !btn) return;
+        
+        // Сохраняем исходный текст
+        const originalText = textEl.textContent.trim();
+        
+        // Функция для проверки, нужно ли показывать кнопку
+        function checkIfNeedsToggle() {
+            // Временно убираем класс collapsed для измерения
+            const wasCollapsed = textEl.classList.contains('collapsed');
+            textEl.classList.remove('collapsed', 'expanded');
+            textEl.style.maxHeight = 'none';
+            
+            const fullHeight = textEl.scrollHeight;
+            const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight);
+            const collapsedHeight = lineHeight * 3; // Примерно 3 строки
+            
+            // Восстанавливаем состояние
+            textEl.style.maxHeight = '';
+            if (wasCollapsed) {
+                textEl.classList.add('collapsed');
+            }
+            
+            return fullHeight > collapsedHeight;
+        }
+        
+        // Инициализация
+        function init() {
+            if (checkIfNeedsToggle()) {
+                textEl.classList.add('collapsed');
+                btn.classList.add('visible');
+                btn.textContent = 'ЕЩЕ';
+            } else {
+                textEl.classList.remove('collapsed', 'expanded');
+                btn.classList.remove('visible');
+            }
+        }
+        
+        // Обработчик клика на кнопку
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (textEl.classList.contains('collapsed')) {
+                // Раскрываем
+                textEl.classList.remove('collapsed');
+                textEl.classList.add('expanded');
+                btn.textContent = 'СВЕРНУТЬ';
+            } else {
+                // Сворачиваем
+                textEl.classList.remove('expanded');
+                textEl.classList.add('collapsed');
+                btn.textContent = 'ЕЩЕ';
+            }
+        });
+        
+        // Инициализируем при загрузке
+        init();
+        
+        // Перепроверяем при изменении размера окна (на случай изменения ширины)
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(init, 250);
+        });
+    });
+})();
+
 // ===== Поповер профиля (кнопка "Выйти") =====
 (function initProfilePopover() {
     const profileMenus = document.querySelectorAll('.profile-menu');
@@ -2103,34 +2396,33 @@ if (document.readyState === 'loading') {
         }
     }
 
-    // Инициализируем списки из HTML, если их еще нет в localStorage
+    // Если списки уже есть в localStorage, рендерим их на страницу
     const existingLists = getListsFromStorage();
-    if (existingLists.length === 0) {
-        const listCards = listsGrid.querySelectorAll('.list-card');
-        const lists = [];
+    if (existingLists.length > 0) {
+        renderListsGrid(listsGrid, existingLists);
+        return;
+    }
 
-        listCards.forEach((card, index) => {
-            const titleEl = card.querySelector('.list-card-title');
-            const quantityEl = card.querySelector('.list-card-quantity');
-            
-            if (titleEl) {
-                const name = titleEl.textContent.trim();
-                const quantityText = quantityEl ? quantityEl.textContent.trim() : '';
-                const quantityMatch = quantityText.match(/\d+/);
-                const quantity = quantityMatch ? parseInt(quantityMatch[0], 10) : 0;
+    // Инициализируем списки из HTML, если их еще нет в localStorage
+    const listCards = listsGrid.querySelectorAll('.list-card');
+    const lists = [];
 
-                lists.push({
-                    id: `list_${index + 1}_${Date.now()}`,
-                    name: name,
-                    items: [],
-                    createdAt: new Date().toISOString()
-                });
-            }
-        });
-
-        if (lists.length > 0) {
-            saveListsToStorage(lists);
+    listCards.forEach((card, index) => {
+        const titleEl = card.querySelector('.list-card-title');
+        if (titleEl) {
+            const name = titleEl.textContent.trim();
+            lists.push({
+                id: `list_${index + 1}_${Date.now()}`,
+                name: name,
+                items: [],
+                createdAt: new Date().toISOString()
+            });
         }
+    });
+
+    if (lists.length > 0) {
+        saveListsToStorage(lists);
+        renderListsGrid(listsGrid, lists);
     }
 })();
 

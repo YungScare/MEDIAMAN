@@ -341,6 +341,28 @@
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.description-text.collapsed {
+    max-height: 4.8em; /* Примерно 3 строки при line-height 1.6 */
+    position: relative;
+}
+
+.description-text.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2em;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.95));
+    pointer-events: none;
+}
+
+.description-text.expanded {
+    max-height: 2000px;
 }
 
 .show-more-btn {
@@ -356,6 +378,11 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: none; /* По умолчанию скрыта, показывается только если текст длинный */
+}
+
+.show-more-btn.visible {
+    display: inline-block;
 }
 
 .show-more-btn:hover {

@@ -514,5 +514,140 @@
 @media (min-width: 481px) {
 }
 
+/* ===== Модалка создания списка ===== */
+.create-list-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 300;
+}
+
+.create-list-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.create-list-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.create-list-dialog {
+    position: relative;
+    width: min(500px, 92vw);
+    background: #0f0f14;
+    border: 1px solid #242533;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    padding: 24px;
+    transform: translateY(12px);
+    transition: transform 0.2s ease;
+}
+
+.create-list-modal.active .create-list-dialog {
+    transform: translateY(0);
+}
+
+.create-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.create-list-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.create-list-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #181920;
+    border: 1px solid #242533;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.create-list-close:hover {
+    background: #1f2029;
+    border-color: #2e3041;
+}
+
+.create-list-close:active {
+    transform: scale(0.96);
+}
+
+.create-list-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.create-list-label {
+    font-size: 14px;
+    color: #b0b4c0;
+}
+
+.create-list-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: #16171f;
+    border: 1px solid #242533;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.create-list-input:focus {
+    outline: none;
+    border-color: #f36e3f;
+    box-shadow: 0 0 0 3px rgba(243, 110, 63, 0.2);
+}
+
+.create-list-error {
+    min-height: 18px;
+    font-size: 13px;
+    color: #ff7b7b;
+}
+
+.create-list-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.create-list-actions .btn {
+    min-width: 120px;
+}
+
+@media (max-width: 480px) {
+    .create-list-dialog {
+        padding: 18px;
+        width: 92vw;
+    }
+
+    .create-list-title {
+        font-size: 20px;
+    }
+}
+
 /* ===== СТРАНИЦА КАРТОЧКИ СПИСКА (LIST-CARD) ===== */
 /* (стили вынесены в отдельный файл list-card.css) */
