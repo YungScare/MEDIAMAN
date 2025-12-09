@@ -1597,6 +1597,24 @@ document.addEventListener('click', function(e) {
 // Обработчик клика на кнопку мобильного поиска
 const mobileSearchBtn = document.getElementById('mobileSearchBtn');
 const mobileSearchInput = document.getElementById('mobileSearchInput');
+const sidebarNav = document.querySelector('.sidebar-nav');
+
+// Фиксируем текущую ширину sidebar-nav для корректной анимации сворачивания
+function snapshotSidebarNavWidth() {
+    if (!sidebarNav) return;
+    const navRect = sidebarNav.getBoundingClientRect();
+    sidebarNav.style.setProperty('--sidebar-nav-width', `${navRect.width}px`);
+}
+
+function clearSidebarNavWidth(afterMs = 0) {
+    if (!sidebarNav) return;
+    setTimeout(() => {
+        sidebarNav.style.removeProperty('--sidebar-nav-width');
+    }, afterMs);
+}
+
+// Сразу фиксируем ширину, чтобы первая анимация была плавной
+snapshotSidebarNavWidth();
 
 if (mobileSearchBtn) {
     mobileSearchBtn.addEventListener('click', function(e) {
@@ -1633,6 +1651,8 @@ if (mobileSearchBtn) {
                 mobileSearchBtn.style.setProperty('--original-nav-width', searchState.originalNavWidth + 'px');
             }
             
+            snapshotSidebarNavWidth();
+            
             // Открываем поиск - трансформируем элементы
             mobileSearchBtn.classList.add('search-active');
             
@@ -1663,6 +1683,7 @@ if (mobileSearchBtn) {
                 searchState.originalNavWidth = null;
                 mobileSearchInput.blur();
                 e.stopPropagation();
+                clearSidebarNavWidth(500);
             }
         });
     }
@@ -1683,6 +1704,7 @@ if (mobileSearchBtn) {
                 if (mobileSearchInput) {
                     mobileSearchInput.blur();
                 }
+                clearSidebarNavWidth(500);
             }
         }
     });
@@ -1697,6 +1719,13 @@ if (mobileSearchBtn) {
                 searchState.originalNavWidth = null;
                 if (mobileSearchInput) {
                     mobileSearchInput.blur();
+                }
+                snapshotSidebarNavWidth();
+                clearSidebarNavWidth(0);
+            } else {
+                snapshotSidebarNavWidth();
+                if (!mobileSearchBtn.classList.contains('search-active')) {
+                    searchState.originalNavWidth = null;
                 }
             }
         }, 100);
@@ -2225,6 +2254,27 @@ if (document.readyState === 'loading') {
             closeAllProfilePopovers();
         }
     });
+})();
+
+// ===== Анимация мобильного аватара при прокрутке =====
+(function initMobileAvatarScrollAnimation() {
+    const mobileProfileAvatar = document.getElementById('mobileProfileAvatar');
+    const mobileMenuToggleBtn = document.getElementById('mobileMenuToggle');
+    if (!mobileProfileAvatar || !mobileMenuToggleBtn) return;
+
+    const SCROLL_THRESHOLD = 16;
+    let isCollapsed = false;
+
+    const handleScroll = () => {
+        const shouldCollapse = window.scrollY > SCROLL_THRESHOLD;
+        if (shouldCollapse !== isCollapsed) {
+            document.body.classList.toggle('mobile-header-scrolled', shouldCollapse);
+            isCollapsed = shouldCollapse;
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Проверяем состояние при загрузке
 })();
 
 // ===== Редактирование названия списка на странице "Мои списки" =====

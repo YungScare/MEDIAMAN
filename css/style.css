@@ -1403,8 +1403,9 @@ body::after {
         margin: 0;
         cursor: pointer;
         z-index: 150;
-        transition: all 0.3s ease;
+        transition: transform 0.35s ease, opacity 0.35s ease, background 0.2s ease, box-shadow 0.2s ease;
         overflow: hidden;
+        will-change: transform, opacity;
     }
 
     .mobile-profile-avatar:hover {
@@ -1422,6 +1423,19 @@ body::after {
         height: 100%;
         object-fit: cover;
         border-radius: 50%;
+        transition: inherit;
+    }
+
+    /* Аватар уезжает под кнопку меню при прокрутке */
+    body.mobile-header-scrolled .mobile-profile-avatar {
+        transform: translateX(56px) scale(0.9);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 120;
+    }
+
+    body.mobile-header-scrolled .mobile-profile-avatar-img {
+        transform: scale(0.9);
     }
 
     /* ===== POPOVER С ФИЛЬТРАМИ ===== */
@@ -1443,40 +1457,42 @@ body::after {
         isolation: isolate;
         /* Начальное состояние - скрыто */
         opacity: 0;
-        transform: scale(0.85) translateY(-12px);
+        transform: translate(10px, -16px) scale(0.9);
         transform-origin: top right;
         visibility: hidden;
         pointer-events: none;
         transition:
-            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-            visibility 0s 0.3s;
+            opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+            visibility 0s 0.35s;
     }
 
     .mobile-popover.active {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: translate(0, 0) scale(1);
         visibility: visible;
         pointer-events: auto;
         transition:
-            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
             visibility 0s;
     }
 
     /* Плавная анимация закрытия - visibility скрывается после завершения анимации */
     .mobile-popover:not(.active) {
         transition:
-            opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-            visibility 0s 0.3s;
+            opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+            visibility 0s 0.35s;
     }
 
     /* Состояние первого popover */
     .mm-popover-main {
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 0.25s ease, transform 0.25s ease;
+        /* Наследуем общее плавное появление, чтобы выезд совпадал с mobile-menu-toggle */
+        transition:
+            opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+            visibility 0s 0.35s;
     }
 
     /* Контейнер для кнопки сортировки */
@@ -2036,7 +2052,9 @@ body::after {
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        width: auto;
+        width: var(--sidebar-nav-width, auto);
+        min-width: var(--sidebar-nav-width, auto);
+        max-width: var(--sidebar-nav-width, 100%);
         height: 56px;
         gap: 4px;
         padding: 6px;
@@ -2232,7 +2250,7 @@ body::after {
         text-decoration: none;
         font-size: 13px;
         font-weight: 500;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     
     /* Убираем transition для background и box-shadow активного nav-item при сворачивании */
@@ -2295,7 +2313,7 @@ body::after {
             0 8px 32px rgba(0, 0, 0, 0.4),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
         cursor: pointer;
-        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         padding: 0;
         flex-shrink: 0;
         box-sizing: border-box;
@@ -2327,7 +2345,7 @@ body::after {
         border-radius: 50% !important;
         padding: 0 !important;
         transform: translateX(-12px);
-        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        transition: width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), min-width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), max-width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), border-radius 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), padding 0.4s ease, transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         overflow: hidden;
         gap: 0 !important;
         flex: 0 0 56px;
@@ -2365,22 +2383,22 @@ body::after {
         border: none !important;
         box-shadow: none !important;
         z-index: 10;
-        transition: opacity 0.3s ease, transform 0.3s ease !important;
+        transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
         flex-direction: row;
         gap: 0;
     }
     
     /* Убираем transition для background и визуальных свойств активного nav-item при сворачивании */
     .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active {
-        transition: opacity 0.3s ease, transform 0.3s ease !important;
+        transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
     
     /* Убираем все transition для background, border, box-shadow при сворачивании */
     .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active,
     .sidebar:has(.mobile-search-btn.search-active) .sidebar-nav .nav-item.active * {
         transition-property: opacity, transform !important;
-        transition-duration: 0.3s !important;
-        transition-timing-function: ease !important;
+        transition-duration: 0.45s !important;
+        transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
 
     /* Скрываем текст активного элемента, показываем только иконку */
@@ -2415,7 +2433,7 @@ body::after {
         max-width: calc(100vw - 120px);
         border-radius: 999px !important;
         padding: 6px 20px !important;
-        transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         justify-content: flex-start;
         gap: 12px;
         flex: 0 1 auto;
@@ -2512,14 +2530,16 @@ body::after {
         height: 56px;
         padding: 0;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(30px) saturate(180%);
-        -webkit-backdrop-filter: blur(30px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(220, 53, 69, 0.4); /* полупрозрачный красный */
+        backdrop-filter: blur(7px) saturate(50%);
+        -webkit-backdrop-filter: blur(7px) saturate(50%);
+        border: none;
         box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        color: #DC3545;
+            0 12px 36px rgba(220, 53, 69, 0.4),
+            0 10px 36px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+        color: #fff;
         font-weight: 700;
         letter-spacing: 0.5px;
         text-transform: uppercase;
@@ -2540,9 +2560,9 @@ body::after {
     }
 
     .mobile-selection-delete-icon {
-        width: 24px;
-        height: 24px;
-        color: #DC3545;
+        width: 20px;
+        height: 20px;
+        color: #fff;
     }
 
     .mobile-selection-delete .mobile-selection-count {
