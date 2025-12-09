@@ -230,8 +230,9 @@
     text-overflow: ellipsis;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    flex: 1;
-    min-width: 0;
+    width: fit-content;
+    max-width: 70%;
+    flex: 0 1 auto;
 }
 
 /* Поле редактирования названия списка */
@@ -368,6 +369,33 @@
     transform: scale(1.02);
 }
 
+.list-card.selection-mode::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    opacity: 1;
+    background-size: 0 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 0.18s ease, background-size 0.22s ease;
+    z-index: 3;
+}
+
+.list-card.selection-mode.selected::after {
+    background: rgba(0, 0, 0, 0.35) url('../images/icons/check2.svg') center/18px 18px no-repeat;
+    background-size: 18px 18px;
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
 /* Кнопка удаления */
 .list-action-btn.delete-btn {
     background: rgba(220, 53, 70, 0.2);
@@ -462,8 +490,9 @@
         text-overflow: ellipsis;
         word-wrap: break-word;
         overflow-wrap: break-word;
-        flex: 1;
-        min-width: 0;
+        width: fit-content;
+        max-width: 75%;
+        flex: 0 1 auto;
     }
 
     .list-card-title-input {
@@ -525,6 +554,18 @@
     /* Режим выбора на мобильных */
     .list-card.selection-mode.selected {
         transform: none;
+    }
+
+    .list-card.selection-mode::after {
+        top: 14px;
+        right: 14px;
+        width: 24px;
+        height: 24px;
+        transition: opacity 0.18s ease, background-size 0.22s ease;
+    }
+
+    .list-card.selection-mode.selected::after {
+        background-size: 16px 16px;
     }
 
     /* Скрываем десктопные кнопки на мобильных */

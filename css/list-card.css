@@ -411,4 +411,111 @@
     }
 }
 
+.selection-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selection-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 50px;
+    background: rgba(220, 53, 69, 0.9);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(220, 53, 69, 0.35);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.selection-delete:hover {
+    transform: translateY(-1px);
+    background: rgba(220, 53, 69, 1);
+    box-shadow: 0 10px 28px rgba(220, 53, 69, 0.45);
+}
+
+.selection-delete .selection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.selection-delete-icon {
+    color: #fff;
+}
+
+/* Режим выбора элементов списка */
+.catalog-item.selection-mode {
+    cursor: pointer;
+    position: relative;
+}
+
+.catalog-item.selection-mode::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-glass, 20px);
+    transition: all 0.25s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.catalog-item.selection-mode::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    opacity: 1;
+    background-size: 0 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 0.18s ease, background-size 0.22s ease;
+    z-index: 3;
+}
+
+.catalog-item.selection-mode:hover::before {
+    border-color: rgba(255, 107, 53, 0.5);
+}
+
+.catalog-item.selection-mode.selected::before {
+    border-color: rgba(255, 107, 53, 1);
+    background: rgba(255, 107, 53, 0.08);
+}
+
+.catalog-item.selection-mode.selected::after {
+    background: rgba(0, 0, 0, 0.35) url('../images/icons/check2.svg') center/18px 18px no-repeat;
+    background-size: 18px 18px;
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 480px) {
+    .catalog-item.selection-mode::after {
+        width: 24px;
+        height: 24px;
+    }
+
+    .catalog-item.selection-mode.selected::after {
+        background-size: 16px 16px;
+    }
+}
+
 

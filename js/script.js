@@ -617,6 +617,189 @@ if (mobileMenuToggle && mobilePopover) {
     }
 })();
 
+// ===== РЕЖИМ ВЫБОРА КОНТЕНТА В КАРТОЧКЕ СПИСКА =====
+(function initListCardItemSelection() {
+    const catalogGrid = document.querySelector('.catalog-grid');
+    const selectBtn = document.getElementById('selectBtn');
+    const selectButton = document.getElementById('selectButton'); // мобильная кнопка
+    const mobilePopover = document.getElementById('mobilePopover');
+    const deleteBtn = document.getElementById('deleteSelectedItems');
+    const selectedCountEl = document.getElementById('selectedItemsCount');
+    const mobileConfirmToggle = document.getElementById('mobileConfirmToggle');
+    const mobileSelectionDeleteBar = document.getElementById('mobileSelectionDeleteBar');
+    const mobileSelectionBarCount = document.getElementById('mobileSelectionBarCount');
+    const mobileMediaQuery = window.matchMedia('(max-width: 480px)');
+
+    if (!catalogGrid || !selectBtn) return; // Работает только на list-card.html
+
+    let isSelectionMode = false;
+    const selectedItems = new Set();
+
+    function updateSelectButtonText() {
+        selectBtn.textContent = isSelectionMode ? 'Отменить' : 'Выбрать';
+        if (selectButton) {
+            const span = selectButton.querySelector('span');
+            if (span) {
+                span.textContent = isSelectionMode ? 'Отменить' : 'Выбрать';
+            }
+        }
+        if (mobileConfirmToggle) {
+            mobileConfirmToggle.style.display = isSelectionMode ? 'flex' : '';
+        }
+    }
+
+    function updateDeleteButton() {
+        if (!deleteBtn) return;
+        const count = selectedItems.size;
+        if (selectedCountEl) {
+            selectedCountEl.textContent = count;
+        }
+        if (mobileSelectionBarCount) {
+            mobileSelectionBarCount.textContent = count;
+        }
+        deleteBtn.style.display = isSelectionMode && count > 0 ? 'inline-flex' : 'none';
+        if (mobileSelectionDeleteBar) {
+            mobileSelectionDeleteBar.disabled = !isSelectionMode || count === 0;
+        }
+    }
+
+    function updateMobileSelectionLayout() {
+        const isMobile = mobileMediaQuery?.matches;
+        if (isSelectionMode && isMobile) {
+            document.body.classList.add('mobile-selection-mode');
+        } else {
+            document.body.classList.remove('mobile-selection-mode');
+        }
+    }
+
+    function ensureItemId(item, index) {
+        let id = item.dataset.itemId || item.getAttribute('data-item-id');
+        if (!id) {
+            id = `catalog_item_${index}_${Date.now()}`;
+            item.dataset.itemId = id;
+        }
+        return id;
+    }
+
+    function updateCatalogItems() {
+        const items = Array.from(catalogGrid.querySelectorAll('.catalog-item'));
+        items.forEach((item, index) => {
+            const id = ensureItemId(item, index);
+            if (isSelectionMode) {
+                item.classList.add('selection-mode');
+                if (selectedItems.has(id)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            } else {
+                item.classList.remove('selection-mode', 'selected');
+            }
+        });
+
+        updateDeleteButton();
+    }
+
+    function toggleSelectionMode() {
+        isSelectionMode = !isSelectionMode;
+
+        if (!isSelectionMode) {
+            selectedItems.clear();
+        }
+
+        updateCatalogItems();
+        updateSelectButtonText();
+        updateDeleteButton();
+        updateMobileSelectionLayout();
+
+        if (mobilePopover) {
+            mobilePopover.classList.remove('active');
+        }
+    }
+
+    selectBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleSelectionMode();
+    });
+
+    if (selectButton) {
+        selectButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSelectionMode();
+        });
+    }
+
+    if (mobileConfirmToggle) {
+        mobileConfirmToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSelectionMode();
+        });
+    }
+
+    catalogGrid.addEventListener('click', (e) => {
+        const item = e.target.closest('.catalog-item');
+        if (!item) return;
+
+        if (!isSelectionMode) return; // Обычное поведение, переход на карточку
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const items = Array.from(catalogGrid.querySelectorAll('.catalog-item'));
+        const id = ensureItemId(item, items.indexOf(item));
+
+        if (selectedItems.has(id)) {
+            selectedItems.delete(id);
+        } else {
+            selectedItems.add(id);
+        }
+
+        updateCatalogItems();
+        updateDeleteButton();
+    });
+
+    function deleteSelectedItems() {
+        if (selectedItems.size === 0) return;
+
+        selectedItems.forEach((id) => {
+            const el = catalogGrid.querySelector(`[data-item-id="${id}"]`);
+            if (el) el.remove();
+        });
+
+        selectedItems.clear();
+        isSelectionMode = false;
+        updateCatalogItems();
+        updateSelectButtonText();
+        updateDeleteButton();
+        updateMobileSelectionLayout();
+    }
+
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSelectedItems();
+        });
+    }
+
+    if (mobileSelectionDeleteBar) {
+        mobileSelectionDeleteBar.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSelectedItems();
+            if (mobilePopover) {
+                mobilePopover.classList.remove('active');
+            }
+        });
+    }
+
+    updateSelectButtonText();
+    updateMobileSelectionLayout();
+})();
+
 // Вспомогательные функции для карточек списков
 function formatListDate(dateString) {
     const date = dateString ? new Date(dateString) : new Date();
