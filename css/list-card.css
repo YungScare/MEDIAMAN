@@ -1,5 +1,31 @@
 /* ===== СТРАНИЦА КАРТОЧКИ СПИСКА (LIST-CARD) ===== */
 
+/* Мобильный счетчик выбранных (как в Мои списки) */
+.mobile-selection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(220, 53, 69, 0.8);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 8px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
+    }
+}
+
 /* Хедер с кнопкой назад и заголовком */
 .list-card-header {
     align-items: flex-start;
